@@ -1,2 +1,30 @@
 2020-07-07 00:07:21.7689|DEBUG|Radio.MainWindow|-------------------------test----------------------------
 2020-07-07 00:52:27.2325|DEBUG|Radio.MainWindow|---------test---------
+2020-07-08 16:06:25.9404|DEBUG|Radio.MainWindow|MainWindow initialized
+2020-07-08 16:06:29.2114|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:42.9877|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:43.9577|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:44.8237|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:45.5607|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:46.2367|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:46.8457|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:47.4747|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:47.9017|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:48.1427|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:48.3407|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:48.5547|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:48.7597|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:48.9857|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:49.1877|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:49.3687|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:49.5337|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:49.7357|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:49.9087|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:50.0997|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:50.2677|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:50.4667|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:50.6647|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:50.8377|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:51.0077|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:51.1817|INFO|Radio.MainWindow|button pressed
+2020-07-08 16:06:51.3757|INFO|Radio.MainWindow|button pressed

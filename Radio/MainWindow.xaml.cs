@@ -26,12 +26,14 @@ namespace Radio
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public MainWindow()
-        {   
-            //Debug.WriteLine("################## Initalizing Main Window ###################");
-            Logger.Debug("---------test---------");
+        {
             InitializeComponent();
-            //Debug.WriteLine("################## Initalized Main Window ####################");
-            
+            Logger.Debug("MainWindow initialized");
+        }
+
+        private void ButtonTest(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("button pressed");
         }
     }
 }
