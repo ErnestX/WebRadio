@@ -13,10 +13,10 @@
     </Window.Resources>
     
     <Grid DataContext="{StaticResource viewModel}">
-        <!--<Button Content="play"
-                Command="{Binding PlayCommand}"/>-->
-        <Button Content="play test"
-                Click="ButtonTest"/>
+        <Button Content="play"
+                Command="{Binding PlayCommand}"/>
+        <!--<Button Content="play test"
+                Click="ButtonTest"/>-->
 
     </Grid>
 </Window>

@@ -5,23 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using NLog.Fluent;
+using System.Windows.Input;
 
 namespace Radio
 {
     class RadioViewModel : INotifyPropertyChanged
+
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler CanExecuteChanged;
 
         //constructor
         public RadioViewModel()
         {
+            this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
         }
 
-        public string PlayCommand()
+        private void ExecutePlayCommand(object obj)
         {
-            Logger.Debug("---------test---------");
-            return null;
+            Logger.Info("Executing Play Command");
         }
+
+        // ICommand implementations
+        public ICommand PlayCommand { protected set; get; }
     }
 }

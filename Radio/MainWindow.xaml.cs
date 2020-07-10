@@ -25,15 +25,16 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public MainWindow()
         {
             InitializeComponent();
             Logger.Debug("MainWindow initialized");
         }
 
-        private void ButtonTest(object sender, RoutedEventArgs e)
-        {
-            Logger.Info("button pressed");
-        }
+        //private void ButtonTest(object sender, RoutedEventArgs e)
+        //{
+        //    Logger.Info("button pressed");
+        //}
     }
 }

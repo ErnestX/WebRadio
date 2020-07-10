@@ -28,3 +28,37 @@
 2020-07-08 16:06:51.0077|INFO|Radio.MainWindow|button pressed
 2020-07-08 16:06:51.1817|INFO|Radio.MainWindow|button pressed
 2020-07-08 16:06:51.3757|INFO|Radio.MainWindow|button pressed
+2020-07-10 17:02:40.7572|DEBUG|Radio.MainWindow|MainWindow initialized
+2020-07-10 17:02:43.8672|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:44.8052|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:45.1932|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:45.5202|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:45.8142|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:46.1092|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:46.3392|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:46.5342|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:46.7252|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:46.9222|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:47.1432|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:47.3442|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:47.5472|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:47.7373|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:47.9272|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:48.1322|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:48.3352|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:48.5482|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:48.7592|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:48.9652|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:49.1632|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:49.3763|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:49.5712|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:49.7702|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:49.9882|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:50.1642|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:50.3452|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:50.5412|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:02:50.7332|DEBUG|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:05:26.9192|DEBUG|Radio.MainWindow|MainWindow initialized
+2020-07-10 17:05:28.3072|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:05:29.0952|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-10 17:05:29.9592|INFO|Radio.RadioViewModel|Executing Play Command
