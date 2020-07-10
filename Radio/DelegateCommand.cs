@@ -22,6 +22,7 @@ namespace Radio
 
         public bool CanExecute(object parameter)
         {
+            // TODO
             return true; 
         }
 

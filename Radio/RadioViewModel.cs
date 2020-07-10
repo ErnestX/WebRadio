@@ -9,12 +9,16 @@ using System.Windows.Input;
 
 namespace Radio
 {
-    class RadioViewModel : INotifyPropertyChanged
+    /* implement INotifyPropertyChanged in order to notify the view model 
+    whether the play command can be executed */
+    class RadioViewModel : INotifyPropertyChanged 
 
     {
+        // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        // required for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler CanExecuteChanged;
 
         //constructor
         public RadioViewModel()
@@ -24,6 +28,7 @@ namespace Radio
 
         private void ExecutePlayCommand(object obj)
         {
+            // TODO
             Logger.Info("Executing Play Command");
         }
 
