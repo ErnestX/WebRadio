@@ -14,25 +14,53 @@ namespace Radio
     class RadioViewModel : INotifyPropertyChanged 
 
     {
-        // create and set up logger
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        // Model
+        private RadioModel radioModel;
+
+        public String Url { protected set; get; }
+
+        // ICommand implementations
+        public ICommand PlayCommand { protected set; get; }
 
         // required for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // create and set up logger
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         //constructor
         public RadioViewModel()
         {
+            // alloc and init model
+            radioModel = new RadioModel(); 
+            
+            // set up commands
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
+
+            // TODO stub
+            this.Url = "test url";
         }
 
         private void ExecutePlayCommand(object obj)
         {
             // TODO
             Logger.Info("Executing Play Command");
+
+            if (this.Url != null) {
+                radioModel.ConnectToURL(this.Url);
+            }
+            else
+            {
+                // TODO 
+                Logger.Info("URL invalid");
+            }       
         }
 
-        // ICommand implementations
-        public ICommand PlayCommand { protected set; get; }
+        // If URL is valid, return sanitized URL; else, return null
+        private String ValidateAndSanitizeURL(String url)
+        {
+            // TODO stub
+            return url; 
+        }
     }
 }

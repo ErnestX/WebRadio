@@ -62,3 +62,7 @@
 2020-07-10 17:05:28.3072|INFO|Radio.RadioViewModel|Executing Play Command
 2020-07-10 17:05:29.0952|INFO|Radio.RadioViewModel|Executing Play Command
 2020-07-10 17:05:29.9592|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-11 12:06:18.3786|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-11 12:06:18.4055|INFO|Radio.RadioViewModel|URL invalid
+2020-07-11 12:07:56.0654|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-11 12:07:56.0874|INFO|Radio.RadioModel|connecting to URL: test url
