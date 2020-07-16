@@ -8,14 +8,19 @@ using System.Threading.Tasks;
 namespace Radio
 {
     // TODO singleton
-    class RadioModel : INotifyPropertyChanged
+    class RadioModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected Boolean Connected { private set; get; } 
+        protected Boolean IsConnected { private set; get; } 
         
         // Playing can be true only if Connected is true
-        protected Boolean TransmittingData { private set; get; }
+        protected Boolean IsTransmittingData { private set; get; }
+
+        // 1) Define a delegate type.
+        public delegate void StateChangedHandler(Boolean newVal);
+
+        // This car can send these events.
+        public event StateChangedHandler ConnectionStateChanged;
+        public event StateChangedHandler TransmissionStateChanged;
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -30,6 +35,12 @@ namespace Radio
         {
             //TODO
             Logger.Info("connecting to URL: {0}", url);
+
+            //stub
+            if (ConnectionStateChanged != null)
+            {
+                ConnectionStateChanged.Invoke(true); 
+            }        
         }
 
         public void StartTransmittingData()

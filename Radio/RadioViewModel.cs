@@ -32,7 +32,8 @@ namespace Radio
         public RadioViewModel()
         {
             // alloc and init model
-            radioModel = new RadioModel(); 
+            radioModel = new RadioModel();
+            radioModel.ConnectionStateChanged += ConnectionStatusChangedHandler; 
             
             // set up commands
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
@@ -54,6 +55,12 @@ namespace Radio
                 // TODO 
                 Logger.Info("URL invalid");
             }       
+        }
+
+        private void ConnectionStatusChangedHandler(Boolean newStatus)
+        {
+            Logger.Info("ViewModel: connection state changed to {0}", newStatus); 
+
         }
 
         // If URL is valid, return sanitized URL; else, return null

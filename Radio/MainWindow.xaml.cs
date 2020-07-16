@@ -27,6 +27,7 @@ namespace Radio
         public MainWindow()
         {
             InitializeComponent();
+            playButton.Content = "play";
         }
     }
 }

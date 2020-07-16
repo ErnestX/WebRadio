@@ -15,7 +15,7 @@
     <Grid DataContext="{StaticResource viewModel}">
         <!-- instead of making use of the click event, the button is bound 
         to an ICommand property which wraps around a function that does the job --> 
-        <Button Content="play"
+        <Button Name="playButton"
                 Command="{Binding PlayCommand}"/> 
     </Grid>
 </Window>
