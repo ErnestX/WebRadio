@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using NLog.Fluent;
 using System.Windows.Input;
+using System.Runtime.CompilerServices;
 
 namespace Radio
 {
@@ -14,16 +15,31 @@ namespace Radio
     class RadioViewModel : INotifyPropertyChanged 
 
     {
-        // Model
         private RadioModel radioModel;
+        private Boolean isConnected;
+        private Boolean isTransmittingData;
 
         public String Url { protected set; get; }
 
-        // ICommand implementations
-        public ICommand PlayCommand { protected set; get; }
-
         // required for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public Boolean IsConnected {
+            private set
+            {
+                SetProperty(ref isConnected, value);
+            }
+            get
+            {
+                return this.isConnected;
+            }
+        }
+
+        // Playing can be true only if Connected is true
+        protected Boolean IsTransmittingData { private set; get; }
+
+        // ICommand implementations
+        public ICommand PlayCommand { protected set; get; }
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -59,8 +75,8 @@ namespace Radio
 
         private void ConnectionStatusChangedHandler(Boolean newStatus)
         {
-            Logger.Info("ViewModel: connection state changed to {0}", newStatus); 
-
+            Logger.Info("ViewModel: connection state changed to {0}", newStatus);
+            IsConnected = true;
         }
 
         // If URL is valid, return sanitized URL; else, return null
@@ -68,6 +84,23 @@ namespace Radio
         {
             // TODO stub
             return url; 
+        }
+
+        protected bool SetProperty<T>(ref T storage, T value,
+                              [CallerMemberName] string propertyName = null)
+        {
+            if (object.Equals(storage, value))
+                return false;
+
+            storage = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

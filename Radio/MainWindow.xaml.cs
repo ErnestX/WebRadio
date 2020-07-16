@@ -2,6 +2,7 @@
 using NLog.Fluent;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -24,10 +25,32 @@ namespace Radio
     /// </summary>
     public partial class MainWindow : Window
     {
+        private RadioViewModel radioViewModel;
+
+        // create and set up logger
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public MainWindow()
         {
             InitializeComponent();
             playButton.Content = "play";
+            this.radioViewModel = new RadioViewModel();
+            radioViewModel.PropertyChanged += OnStateChanged; 
+            this.DataContext = radioViewModel;
+        }
+
+        void OnStateChanged(object sender, PropertyChangedEventArgs args)
+        {
+            Logger.Info("OnStateChanged sent by: {0}", args.PropertyName);
+
+            if (args.PropertyName.Equals("IsConnected"))
+            {
+                if (this.radioViewModel.IsConnected)
+                {
+                    playButton.Content = "connected!";
+                }
+            }
+
         }
     }
 }

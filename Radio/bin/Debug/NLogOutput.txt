@@ -71,3 +71,45 @@
 2020-07-16 00:23:19.9874|INFO|Radio.RadioViewModel|Executing Play Command
 2020-07-16 00:23:20.0114|INFO|Radio.RadioModel|connecting to URL: test url
 2020-07-16 00:23:20.0234|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 00:57:06.7115|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 00:57:06.7375|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 00:57:06.7485|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:14.4451|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:14.4671|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:14.4671|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:18.2401|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:18.2401|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:18.2491|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:18.6091|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:18.6091|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:18.6091|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:18.8731|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:18.8731|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:18.8731|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:19.1812|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:19.1861|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:19.1861|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:20.1361|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:20.1411|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:20.1411|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:53.1301|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:53.1521|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:53.1621|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:51:55.6481|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:51:55.6481|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:51:55.6581|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:53:51.9143|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:53:51.9363|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:53:51.9363|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:53:51.9573|INFO|Radio.MainWindow|OnStateChanged
+2020-07-16 01:53:54.7393|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:53:54.7393|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:53:54.7483|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:55:00.1307|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:55:00.1537|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:55:00.1647|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:55:00.1717|INFO|Radio.MainWindow|OnStateChanged sent by: System.ComponentModel.PropertyChangedEventArgs
+2020-07-16 01:55:41.2362|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-16 01:55:41.2582|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-16 01:55:41.2682|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
+2020-07-16 01:55:41.2682|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected

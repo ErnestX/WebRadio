@@ -15,10 +15,7 @@ namespace Radio
         // Playing can be true only if Connected is true
         protected Boolean IsTransmittingData { private set; get; }
 
-        // 1) Define a delegate type.
         public delegate void StateChangedHandler(Boolean newVal);
-
-        // This car can send these events.
         public event StateChangedHandler ConnectionStateChanged;
         public event StateChangedHandler TransmissionStateChanged;
 
@@ -38,9 +35,7 @@ namespace Radio
 
             //stub
             if (ConnectionStateChanged != null)
-            {
                 ConnectionStateChanged.Invoke(true); 
-            }        
         }
 
         public void StartTransmittingData()
