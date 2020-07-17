@@ -19,7 +19,7 @@ namespace Radio
         private Boolean isConnected;
         private Boolean isTransmittingData;
 
-        public String Url { protected set; get; }
+        public Uri Url { protected set; get; }
 
         // required for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -55,7 +55,7 @@ namespace Radio
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
 
             // TODO stub
-            this.Url = "test url";
+            this.Url = new Uri("https://www.youtube.com/watch?v=9ORO3cnPu7k");
         }
 
         private void ExecutePlayCommand(object obj)

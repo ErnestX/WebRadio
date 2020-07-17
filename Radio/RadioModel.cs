@@ -28,7 +28,7 @@ namespace Radio
             //TODO
         }
 
-        public void ConnectToURL(String url)
+        public void ConnectToURL(Uri url)
         {
             //TODO
             Logger.Info("connecting to URL: {0}", url);
