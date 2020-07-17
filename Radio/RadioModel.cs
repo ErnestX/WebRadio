@@ -15,8 +15,8 @@ namespace Radio
         // Playing can be true only if Connected is true
         protected Boolean IsTransmittingData { private set; get; }
 
-        public delegate void StateChangedHandler(Boolean newVal);
-        public event StateChangedHandler ConnectionStateChanged;
+        public delegate void StateChangedHandler(object sender, EventArgs e);
+        public event StateChangedHandler Connected;
         public event StateChangedHandler TransmissionStateChanged;
 
         // create and set up logger
@@ -34,8 +34,8 @@ namespace Radio
             Logger.Info("connecting to URL: {0}", url);
 
             //stub
-            if (ConnectionStateChanged != null)
-                ConnectionStateChanged.Invoke(true); 
+            if (Connected != null)
+                Connected.Invoke(this, null); 
         }
 
         public void StartTransmittingData()

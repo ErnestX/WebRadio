@@ -113,3 +113,7 @@
 2020-07-16 01:55:41.2582|INFO|Radio.RadioModel|connecting to URL: test url
 2020-07-16 01:55:41.2682|INFO|Radio.RadioViewModel|ViewModel: connection state changed to True
 2020-07-16 01:55:41.2682|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected
+2020-07-17 00:53:43.7262|INFO|Radio.RadioViewModel|Executing Play Command
+2020-07-17 00:53:43.7501|INFO|Radio.RadioModel|connecting to URL: test url
+2020-07-17 00:53:43.7501|INFO|Radio.RadioViewModel|ViewModel: connected!
+2020-07-17 00:53:43.7691|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected

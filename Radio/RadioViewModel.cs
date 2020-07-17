@@ -49,8 +49,8 @@ namespace Radio
         {
             // alloc and init model
             radioModel = new RadioModel();
-            radioModel.ConnectionStateChanged += ConnectionStatusChangedHandler; 
-            
+            radioModel.Connected += ConnectedEventHandler;
+
             // set up commands
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
 
@@ -73,9 +73,9 @@ namespace Radio
             }       
         }
 
-        private void ConnectionStatusChangedHandler(Boolean newStatus)
+        private void ConnectedEventHandler(object sender, EventArgs e)
         {
-            Logger.Info("ViewModel: connection state changed to {0}", newStatus);
+            Logger.Info("ViewModel: connected!");
             IsConnected = true;
         }
 
