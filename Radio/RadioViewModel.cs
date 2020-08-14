@@ -17,7 +17,6 @@ namespace Radio
     {
         private RadioModel radioModel;
         private Boolean isConnected;
-        private Boolean isTransmittingData;
 
         public Uri Url { protected set; get; }
 
@@ -34,9 +33,6 @@ namespace Radio
                 return this.isConnected;
             }
         }
-
-        // Playing can be true only if Connected is true
-        protected Boolean IsTransmittingData { private set; get; }
 
         // ICommand implementations
         public ICommand PlayCommand { protected set; get; }
@@ -63,14 +59,15 @@ namespace Radio
             // TODO
             Logger.Info("Executing Play Command");
 
-            if (this.Url != null) {
+            if (this.Url != null) 
+            {
                 radioModel.ConnectToURL(this.Url);
             }
             else
             {
                 // TODO 
                 Logger.Info("URL invalid");
-            }       
+            }
         }
 
         private void ConnectedEventHandler(object sender, EventArgs e)
@@ -82,8 +79,15 @@ namespace Radio
         // If URL is valid, return sanitized URL; else, return null
         private String ValidateAndSanitizeURL(String url)
         {
-            // TODO stub
-            return url; 
+            if (url == null) 
+            {
+                return null;
+            } 
+            else
+            {
+                // TODO: stub
+                return url;
+            }
         }
 
         protected bool SetProperty<T>(ref T storage, T value,

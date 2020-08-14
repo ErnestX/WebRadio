@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
+[assembly: InternalsVisibleToAttribute("Radio.UnitTests")]
 namespace Radio
 {
     // TODO singleton
     class RadioModel
     {
-        protected Boolean IsConnected { private set; get; } 
-        
-        // Playing can be true only if Connected is true
-        protected Boolean IsTransmittingData { private set; get; }
+        protected Boolean IsConnected { private set; get; }
+        protected Uri CurrentResourceUri { get; set; }
 
         public delegate void StateChangedHandler(object sender, EventArgs e);
         public event StateChangedHandler Connected;
-        public event StateChangedHandler TransmissionStateChanged;
 
-        // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        // constructor
         public RadioModel()
         {
             //TODO
@@ -33,14 +32,16 @@ namespace Radio
             //TODO
             Logger.Info("connecting to URL: {0}", url);
 
-            //stub
-            if (Connected != null)
-                Connected.Invoke(this, null); 
+            Uri resUrl = new Uri("test resource");
+            this.CurrentResourceUri = resUrl;
+            this.InvokeConnectedEvent(resUrl);
         }
 
-        public void StartTransmittingData()
+        void InvokeConnectedEvent(Uri resourceUrl)
         {
-            //TODO
+            //stub
+            if (Connected != null)
+                Connected.Invoke(this, null);
         }
     }
 }

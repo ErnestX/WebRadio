@@ -1,0 +1,88 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio.UnitTests\\Radio.UnitTests.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio.UnitTests\\Radio.UnitTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio.UnitTests\\Radio.UnitTests.csproj",
+        "projectName": "Radio.UnitTests",
+        "projectPath": "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio.UnitTests\\Radio.UnitTests.csproj",
+        "packagesPath": "C:\\Users\\Jialiang\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio.UnitTests\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Jialiang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio\\Radio.csproj": {
+                "projectPath": "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio\\Radio.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.7.0, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[3.17.0, )"
+            },
+            "nunit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio\\Radio.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio\\Radio.csproj",
+        "projectName": "Radio",
+        "projectPath": "C:\\Users\\Jialiang\\Desktop\\Radio\\Radio\\Radio.csproj"
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    }
+  }
+}

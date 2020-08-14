@@ -117,3 +117,6 @@
 2020-07-17 00:53:43.7501|INFO|Radio.RadioModel|connecting to URL: test url
 2020-07-17 00:53:43.7501|INFO|Radio.RadioViewModel|ViewModel: connected!
 2020-07-17 00:53:43.7691|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected
+2020-08-13 20:33:13.9415|INFO|Radio.YoutubeResFinder|videoParams count:
+2020-08-13 20:36:54.7480|INFO|Radio.YoutubeResFinder|videoParams count: 5
+2020-08-13 20:37:36.4420|INFO|Radio.YoutubeResFinder|videoParams count: 21

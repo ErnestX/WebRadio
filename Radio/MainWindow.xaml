@@ -8,14 +8,13 @@
         Title="MainWindow" 
         ResizeMode="NoResize" Height="350" Width="350">
 
-    <!--<Window.Resources>
-        <local:RadioViewModel x:Key="viewModel" />
-    </Window.Resources>-->
-    
     <Grid>
         <!-- instead of making use of the click event, the button is bound 
         to an ICommand property which wraps around a function that does the job --> 
         <Button Name="playButton"
-                Command="{Binding PlayCommand}"/> 
+                Command="{Binding PlayCommand}"/>
+        <MediaElement Name="mediaElement"
+                      Visibility="Collapsed">
+        </MediaElement>
     </Grid>
 </Window>
