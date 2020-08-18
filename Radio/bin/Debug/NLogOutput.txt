@@ -120,3 +120,11 @@
 2020-08-13 20:33:13.9415|INFO|Radio.YoutubeResFinder|videoParams count:
 2020-08-13 20:36:54.7480|INFO|Radio.YoutubeResFinder|videoParams count: 5
 2020-08-13 20:37:36.4420|INFO|Radio.YoutubeResFinder|videoParams count: 21
+2020-08-18 13:43:37.3558|INFO|Radio.RadioViewModel|Executing Play Command
+2020-08-18 13:43:37.3848|INFO|Radio.RadioModel|connecting to URL: https://www.youtube.com/watch?v=9ORO3cnPu7k
+2020-08-18 14:38:44.7706|INFO|Radio.RadioViewModel|Executing Play Command
+2020-08-18 14:38:44.7966|INFO|Radio.RadioModel|connecting to URL: https://www.youtube.com/watch?v=9ORO3cnPu7k
+2020-08-18 14:39:15.1752|INFO|Radio.RadioViewModel|Executing Play Command
+2020-08-18 14:39:15.1992|INFO|Radio.RadioModel|connecting to URL: https://www.youtube.com/watch?v=9ORO3cnPu7k
+2020-08-18 14:39:15.2112|INFO|Radio.RadioViewModel|ViewModel: connected!
+2020-08-18 14:39:15.2192|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected

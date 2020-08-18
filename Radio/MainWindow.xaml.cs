@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using NAudio.Wave;
+using NLog;
 using NLog.Fluent;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,6 +39,29 @@ namespace Radio
             this.radioViewModel = new RadioViewModel();
             radioViewModel.PropertyChanged += OnStateChanged; 
             this.DataContext = radioViewModel;
+
+            // test NAudio
+            Console.WriteLine("start NAudio test");
+            Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
+            StreamAudioFromUrl(testUrl);
+        }
+
+        void StreamAudioFromUrl(Uri streamUrl)
+        {
+            var url = streamUrl.ToString();
+            var mf = new MediaFoundationReader(url);
+            var wo = new WaveOutEvent();
+                //using (var mf = new MediaFoundationReader(url))
+                //using (var wo = new WaveOutEvent())
+                //{
+                wo.Init(mf);
+                wo.Play();
+                Console.WriteLine("NAudio playing");
+                //while (wo.PlaybackState == PlaybackState.Playing)
+                //{
+                //    Thread.Sleep(1000);
+                //}
+            //}
         }
 
         void OnStateChanged(object sender, PropertyChangedEventArgs args)

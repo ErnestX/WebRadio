@@ -25,3 +25,5 @@ C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\nunit.engine.core.dll
 C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\nunit.framework.dll
 C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\nunit.framework.pdb
 C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\nunit.framework.xml
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\NAudio.dll
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\NAudio.xml

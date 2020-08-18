@@ -32,7 +32,7 @@ namespace Radio
             //TODO
             Logger.Info("connecting to URL: {0}", url);
 
-            Uri resUrl = new Uri("test resource");
+            Uri resUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
             this.CurrentResourceUri = resUrl;
             this.InvokeConnectedEvent(resUrl);
         }
