@@ -27,3 +27,9 @@ C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\nunit.framework.pdb
 C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\nunit.framework.xml
 C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\NAudio.dll
 C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\NAudio.xml
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\Microsoft.Dynamic.dll
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\Microsoft.Scripting.dll
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\Microsoft.Scripting.Metadata.dll
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\Microsoft.Dynamic.xml
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\Microsoft.Scripting.xml
+C:\Users\Jialiang\Desktop\Radio\Radio\bin\Debug\Microsoft.Scripting.Metadata.xml
