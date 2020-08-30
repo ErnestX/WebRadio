@@ -65,20 +65,32 @@ namespace Radio.UnitTests
             List<byte[]> bfs = new List<byte[]>(0);
 
             BuffersManager bfm = new BuffersManager(BUFFER_SIZE, 5);
-            Assert.IsTrue(bfm.NumOfBuffers == 5);
+            Assert.AreEqual(5, bfm.NumOfBuffers);
+            Assert.AreEqual(5, bfm.NumOfAvailableBuffers);
 
+            // checkout 5
             for (int i = 0; i < 5; i++)
             {
                 bfs.Add(bfm.CheckoutNewBuffer());
             }
-            Assert.IsTrue(bfm.NumOfBuffers == 5);
+            Assert.AreEqual(5, bfm.NumOfBuffers);
+            Assert.AreEqual(0, bfm.NumOfAvailableBuffers);
 
-            for (int i = 5; i < 10; i++)
+            // checkout another 5
+            for (int i = 0; i < 5; i++)
             {
                 bfs.Add(bfm.CheckoutNewBuffer());
             }
-            Assert.IsTrue(bfm.NumOfBuffers == 10);
+            Assert.AreEqual(10, bfm.NumOfBuffers);
+            Assert.AreEqual(0, bfm.NumOfAvailableBuffers);
 
+            // recycle 5
+            byte[] b1 = bfs[3];
+            b1[20] = 100;
+            Array.Resize(ref b1, BUFFER_SIZE - 10);
+            byte[] b2 = bfs[7];
+            b2[10] = 50;
+            Array.Resize(ref b2, BUFFER_SIZE + 10);
             bfm.RecycleUsedBuffer(bfs[0]);
             bfm.RecycleUsedBuffer(bfs[3]);
             bfm.RecycleUsedBuffer(bfs[7]);
@@ -86,17 +98,21 @@ namespace Radio.UnitTests
             bfm.RecycleUsedBuffer(bfs[6]);
             bfm.RecycleUsedBuffer(bfs[0]);
             bfm.RecycleUsedBuffer(bfs[9]);
-            bfs.RemoveAt(0);
-            bfs.RemoveAt(3);
+            bfs.RemoveAt(9);
             bfs.RemoveAt(7);
             bfs.RemoveAt(6);
-            bfs.RemoveAt(9);
+            bfs.RemoveAt(3);
+            bfs.RemoveAt(0);
+            Assert.AreEqual(10, bfm.NumOfBuffers);
+            Assert.AreEqual(5, bfm.NumOfAvailableBuffers);
 
-            for (int i = 5; i < 15; i++)
+            // checkout 10
+            for (int i = 0; i < 10; i++)
             {
                 bfs.Add(bfm.CheckoutNewBuffer());
             }
             Assert.IsTrue(bfm.NumOfBuffers == 15);
+            Assert.IsTrue(bfm.NumOfAvailableBuffers == 0);
 
             // check uniqueness
             if (bfs.Distinct().Count() != bfs.Count)

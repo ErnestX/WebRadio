@@ -19,6 +19,13 @@ namespace Radio
                 return allBuffers.Count;
             }
         }
+        public int NumOfAvailableBuffers
+        {
+            get
+            {
+                return availableBufferIndexes.Count;
+            }
+        }
 
         private List<byte[]> allBuffers;
         private List<int> availableBufferIndexes;
@@ -51,9 +58,9 @@ namespace Radio
             } 
             else
             {
-                int idx = availableBufferIndexes.Count - 1;
+                int bIdx = availableBufferIndexes.Last();
                 availableBufferIndexes.RemoveAt(availableBufferIndexes.Count - 1);
-                return allBuffers[idx];
+                return allBuffers[bIdx];
             }
         }
 
@@ -64,16 +71,23 @@ namespace Radio
                 throw new ArgumentException("Buffer cannot be null");
             }
 
-            int idx = allBuffers.IndexOf(ubf);
-            if (idx > -1)
+            int bIdx = allBuffers.IndexOf(ubf);
+            if (bIdx > -1)
             {
-                if (allBuffers[idx].Length != BufferSize)
+                if (availableBufferIndexes.IndexOf(bIdx) == -1)
                 {
-                    // allBuffers[idx] = new byte[BufferSize];
-                    byte[] b = allBuffers[idx];
-                    Array.Resize(ref b, BufferSize);
+                    // do recycling
+                    if (allBuffers[bIdx].Length != BufferSize)
+                    {
+                        byte[] b = allBuffers[bIdx];
+                        Array.Resize(ref b, BufferSize);
+                    }
+                    availableBufferIndexes.Add(bIdx);
                 }
-                availableBufferIndexes.Add(idx);
+                else
+                {
+                    Console.WriteLine("buffer is already recycled");
+                }
             } 
             else
             {
@@ -87,9 +101,8 @@ namespace Radio
             availableBufferIndexes.Add(allBuffers.Count - 1);
         }
 
-        private void CheckAndFixAvailBfIdxs()
+        private void RemoveOutOfBoundIndexesFromAvailBfIdxs()
         {
-            // delete index if out of bound
             List<int> indexToRemove = new List<int>();
             for (int i = 0; i < availableBufferIndexes.Count; i++)
             {
@@ -103,8 +116,10 @@ namespace Radio
                 availableBufferIndexes.RemoveAt(idx);
                 Console.WriteLine("out-of-bound index removed");
             }
+        }
 
-            // remove duplicates
+        private void RemoveDuplicatesFromAvailBfIdxs()
+        {
             for (int i = 0; i < availableBufferIndexes.Count; i++)
             {
                 int dupIdx = availableBufferIndexes.FindIndex(i + 1, idx => idx == availableBufferIndexes[i]);
