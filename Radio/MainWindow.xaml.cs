@@ -30,6 +30,7 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private RadioViewModel radioViewModel;
+        private MonitoredMp3WaveProvider waveProvider;
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -60,41 +61,11 @@ namespace Radio
 
         void StreamAudioFromUrl(Uri streamUrl)
         {
-            HttpWebRequest req;
-            HttpWebResponse res = null;
-
-            try
-            {
-                req = (HttpWebRequest)WebRequest.Create(streamUrl.ToString());
-                res = (HttpWebResponse)req.GetResponse();
-                Stream stream = res.GetResponseStream();
-
-                byte[] buffer = new byte[4096];
-                int numOfbytesReadIntoBuffer;
-                bool isFirstIteration = true;
-                while ((numOfbytesReadIntoBuffer = stream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    if (isFirstIteration)
-                    {
-                        Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(buffer));
-                        Console.WriteLine("Printing WaveFormat Object: ");
-                        Console.WriteLine(mp3FileReader.WaveFormat.ToString());
-                        
-                        isFirstIteration = false; 
-                    }
-
-                    for (int i = 0; i < numOfbytesReadIntoBuffer; i++)
-                    {
-                        Console.WriteLine(buffer[i].ToString());
-                    }
-                }
-            }
-            finally
-            {
-                if (res != null)
-                    res.Close();
-            }
-            //Console.In.Read();
+            waveProvider = new MonitoredMp3WaveProvider(streamUrl);
+            WaveOut wo = new WaveOut();
+            wo.Init(waveProvider);
+            wo.Play();
+            Console.WriteLine("NAudio playing");
         }
 
         void OnStateChanged(object sender, PropertyChangedEventArgs args)

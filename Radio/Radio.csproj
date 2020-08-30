@@ -84,7 +84,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Mp3StreamPlayer.cs" />
+    <Compile Include="BuffersManager.cs" />
+    <Compile Include="MonitoredMp3WaveProvider.cs" />
     <Compile Include="SoundCloudResourceFinder.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="RadioModel.cs" />

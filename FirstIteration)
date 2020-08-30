@@ -1,0 +1,71 @@
+[33mcommit 5f611806161be6eafaa64e4cfec121acb43e7440[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Tue Aug 25 19:49:00 2020 -0400
+
+    tested reading the streamed file manually and retrieved wave format
+
+[33mcommit 519e520ca664298aa931d0c7a59786554aa8468d[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Tue Aug 18 14:52:06 2020 -0400
+
+    tested NAudio
+
+[33mcommit aad6d1e40394531018f49bdfbf4a62dfc0f38720[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Fri Aug 14 01:17:52 2020 -0400
+
+    setup unit tests and tried to find the streaming urls but youtube changed the way it works.
+
+[33mcommit 8f7ca9a11f68e8b40ec8bde64c9d8075aa12df3f[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Fri Jul 17 01:05:17 2020 -0400
+
+    changed url type from string to Uri
+
+[33mcommit 4f37ac78f4f95abd2c72440941161f0fc124ec8a[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Fri Jul 17 00:54:34 2020 -0400
+
+    refactored using the conventional event delegate arguments
+
+[33mcommit 3ae8b0256d4ca1e24f5dea9b1d6abe1d29159e81[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Thu Jul 16 01:56:50 2020 -0400
+
+    implemented view model binding in code; tested receieving event from view model and modifying UI in response
+
+[33mcommit 594a0eed507ea411c4033d95880ca29218ef9e06[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Thu Jul 16 00:52:39 2020 -0400
+
+    tested event firing from the model and receieved by the view model
+
+[33mcommit 1f1d473a562a15af5b86953e2e7a80830aa6290f[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Sat Jul 11 12:09:39 2020 -0400
+
+    set up RadioModel and tested calling view model from the view and calling the model from teh view model
+
+[33mcommit d875dea75cf25ac706f0aaa1790ac5cee50293bb[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Fri Jul 10 19:05:49 2020 -0400
+
+    cleaned up
+
+[33mcommit b6f23c66eaf9bdc9ec6e3dcd066ff85b26daf7c9[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Fri Jul 10 17:06:43 2020 -0400
+
+    tested ICommand interface and added play command stub
+
+[33mcommit 7e67f31567de887a81940620d30bd70a16963b62[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Wed Jul 8 16:11:10 2020 -0400
+
+    Simple button event handler test
+
+[33mcommit 0cf772ca5625180e385092d3bf0ed8c778f8b17e[m
+Author: ErnestX <xiangspecial2012@gmail.com>
+Date:   Wed Jul 8 10:36:16 2020 -0400
+
+    First commit

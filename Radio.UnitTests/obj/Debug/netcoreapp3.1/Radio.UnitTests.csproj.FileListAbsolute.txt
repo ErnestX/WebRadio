@@ -1,7 +1,6 @@
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.csprojAssemblyReference.cache
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.AssemblyInfoInputs.cache
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.AssemblyInfo.cs
-C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.csproj.CoreCompileInputs.cache
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\bin\Debug\netcoreapp3.1\NUnit3.TestAdapter.dll
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\bin\Debug\netcoreapp3.1\NUnit3.TestAdapter.pdb
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\bin\Debug\netcoreapp3.1\nunit.engine.dll
@@ -102,3 +101,6 @@ C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.Un
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.pdb
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.genruntimeconfig.cache
 C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\bin\Debug\netcoreapp3.1\testhost.exe
+C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\bin\Debug\netcoreapp3.1\NAudio.dll
+C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\bin\Debug\netcoreapp3.1\System.Resources.Extensions.dll
+C:\Users\Jialiang\Desktop\Radio\Radio.UnitTests\obj\Debug\netcoreapp3.1\Radio.UnitTests.csproj.CoreCompileInputs.cache

@@ -46,6 +46,10 @@
               "target": "Package",
               "version": "[16.7.0, )"
             },
+            "NAudio": {
+              "target": "Package",
+              "version": "[1.10.0, )"
+            },
             "NUnit3TestAdapter": {
               "target": "Package",
               "version": "[3.17.0, )"

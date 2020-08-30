@@ -13,12 +13,6 @@ namespace Radio.UnitTests
         }
 
         [Test]
-        public void DummyTest()
-        {
-            Assert.Pass(); 
-        }
-
-        [Test]
         public void FindVideoResByYoutubeLink_ValidAndSuccessful_ReturnVideoRes()
         {
             try
