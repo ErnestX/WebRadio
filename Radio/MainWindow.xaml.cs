@@ -30,7 +30,7 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private RadioViewModel radioViewModel;
-        private MonitoredMp3WaveProvider waveProvider;
+        private IWaveProvider waveProvider;
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -44,7 +44,7 @@ namespace Radio
             this.DataContext = radioViewModel;
 
             // test NAudio
-            Console.WriteLine("start NAudio test");
+            Console.WriteLine("start audio test");
             Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
             StreamAudioFromUrl(testUrl);
         }
@@ -62,10 +62,23 @@ namespace Radio
         void StreamAudioFromUrl(Uri streamUrl)
         {
             waveProvider = new MonitoredMp3WaveProvider(streamUrl);
+            //waveProvider = new MediaFoundationReader(streamUrl.ToString());
+
+            //HttpWebRequest req = (HttpWebRequest)WebRequest.Create(streamUrl.ToString());
+            //HttpWebResponse tempRes = (HttpWebResponse)req.GetResponse();
+            //Stream tempStream = tempRes.GetResponseStream();
+            //byte[] largeBf = new byte[800000]; // this should be long enough to load the whole 700kb file! 
+            //int num = tempStream.Read(largeBf, 0, largeBf.Length);
+            //Console.WriteLine("loaded buffer size: {0}", num);
+            //Mp3FileReader testFileReader = new Mp3FileReader(new MemoryStream(largeBf));
+
             WaveOut wo = new WaveOut();
+            wo.DesiredLatency = 700;
+            wo.NumberOfBuffers = 3;
             wo.Init(waveProvider);
-            wo.Play();
-            Console.WriteLine("NAudio playing");
+            //wo.Init(testFileReader);
+            wo.Play(); // TODO: Call dispose()
+            Console.WriteLine("audio playing");
         }
 
         void OnStateChanged(object sender, PropertyChangedEventArgs args)

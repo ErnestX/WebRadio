@@ -100,45 +100,5 @@ namespace Radio
             allBuffers.Add(new byte[BufferSize]);
             availableBufferIndexes.Add(allBuffers.Count - 1);
         }
-
-        private void RemoveOutOfBoundIndexesFromAvailBfIdxs()
-        {
-            List<int> indexToRemove = new List<int>();
-            for (int i = 0; i < availableBufferIndexes.Count; i++)
-            {
-                if (availableBufferIndexes[i] < 0 || availableBufferIndexes[i] >= allBuffers.Count)
-                {
-                    indexToRemove.Add(i);
-                }
-            }
-            foreach (int idx in indexToRemove)
-            {
-                availableBufferIndexes.RemoveAt(idx);
-                Console.WriteLine("out-of-bound index removed");
-            }
-        }
-
-        private void RemoveDuplicatesFromAvailBfIdxs()
-        {
-            for (int i = 0; i < availableBufferIndexes.Count; i++)
-            {
-                int dupIdx = availableBufferIndexes.FindIndex(i + 1, idx => idx == availableBufferIndexes[i]);
-                if (dupIdx > -1)
-                {
-                    availableBufferIndexes.RemoveAt(dupIdx);
-                    Console.WriteLine("duplicate removed");
-                }
-            }
-        }
-
-        //public void InitWithStreamAndFillFirstBuffer(Stream st)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public byte[] GetFilledBufferAndFillNextBuffer()
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

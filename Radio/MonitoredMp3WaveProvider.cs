@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.Scripting;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,11 +10,21 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class MonitoredMp3WaveProvider : IWaveProvider
+    class MonitoredMp3WaveProvider : IWaveProvider, IDisposable
     {
-        // have to cover the first two frame headers. 
-        const int BYTE_READ_FOR_INIT = 16384;
+        const int BYTE_READ_FOR_INIT = 16384; // have to cover the first two frame headers. 
         const int INITIAL_BUFFER_NUM = 4;
+        private HttpWebResponse response;
+        private Stream stream;
+#if DEBUG
+        private Stream debugFileStream = File.Create("C:\\Users\\Jialiang\\Desktop\\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
+#endif
+
+        // testing
+        private Stream testLocalStream;
+        private byte[] largeBf;
+        private Mp3FileReader testFileReader;
+
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
 
@@ -30,22 +41,29 @@ namespace Radio
         public MonitoredMp3WaveProvider(Uri mp3Url)
         {
             // init WaveFormat from a fragment of the mp3 file
-            HttpWebRequest request;
-            HttpWebResponse response = null;
+            HttpWebRequest req;
+            HttpWebResponse tempRes = null;
+
+            // initalize stream here??????
+
             try
             {
-                request = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
-                response = (HttpWebResponse)request.GetResponse();
-                Stream stream = response.GetResponseStream();
+                req = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
+                tempRes = (HttpWebResponse)req.GetResponse();
+                Stream tempStream = tempRes.GetResponseStream();
 
                 byte[] bfr = new byte[BYTE_READ_FOR_INIT];
-                int bytesRead = stream.Read(bfr, 0, bfr.Length);
+                int bytesRead = tempStream.Read(bfr, 0, bfr.Length);
+                //for (int i = 0; i < BYTE_READ_FOR_INIT; i++)
+                //{
+                //    Console.WriteLine(bfr[i]);
+                //}
                 Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(bfr));
-                this.WaveFormat = mp3FileReader.WaveFormat;
-                this.Url = mp3Url;
+                WaveFormat = mp3FileReader.WaveFormat;
+                Url = mp3Url;
 
                 Console.WriteLine("Printing WaveFormat Object: ");
-                Console.WriteLine(this.WaveFormat.ToString());
+                Console.WriteLine(WaveFormat.ToString());
             }
             catch (Exception ex)
             {
@@ -55,48 +73,64 @@ namespace Radio
             }
             finally
             {
-                if (response != null)
-                    response.Close();
+                if (tempRes != null)
+                {
+                    tempRes.Close();
+                }
             }
+
+            this.InitializeStream();
+        }
+
+        private void InitializeStream()
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(Url.ToString());
+            response = (HttpWebResponse)req.GetResponse(); // after making this work, reuse the response from before instead of opening this new one
+            stream = response.GetResponseStream();
+
+            // test by downloading the whole thing
+            //largeBf = new byte[800000];
+            //int num = stream.Read(largeBf, 0, largeBf.Length);
+            //Console.WriteLine("loaded buffer size: {0}", num);
+            //testLocalStream = new MemoryStream(largeBf);
+            //testFileReader = new Mp3FileReader(testLocalStream);
         }
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            //HttpWebRequest req;
-            //HttpWebResponse res = null;
-
-            //try
+            int numOfBytesReadIntoBuffer;
+            numOfBytesReadIntoBuffer = stream.Read(buffer, offset, count);
+            //numOfBytesReadIntoBuffer = testLocalStream.Read(buffer, offset, count);
+            //numOfBytesReadIntoBuffer = testFileReader.Read(buffer, offset, count);
+            //for (int i = 0; i < count; i++)
             //{
-            //    req = (HttpWebRequest)WebRequest.Create(this.Url.ToString());
-            //    res = (HttpWebResponse)req.GetResponse();
-            //    Stream stream = res.GetResponseStream();
-
-            //    byte[] buffer = new byte[4096];
-            //    int numOfbytesReadIntoBuffer;
-            //    bool isFirstIteration = true;
-            //    while ((numOfbytesReadIntoBuffer = stream.Read(buffer, 0, buffer.Length)) > 0)
-            //    {
-            //        if (isFirstIteration)
-            //        {
-            //            Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(buffer));
-            //            Console.WriteLine("Printing WaveFormat Object: ");
-            //            Console.WriteLine(mp3FileReader.WaveFormat.ToString());
-
-            //            isFirstIteration = false;
-            //        }
-
-            //        for (int i = 0; i < numOfbytesReadIntoBuffer; i++)
-            //        {
-            //            Console.WriteLine(buffer[i].ToString());
-            //        }
-            //    }
+            //    Console.WriteLine(buffer[i + offset]);
             //}
-            //finally
-            //{
-            //    if (res != null)
-            //        res.Close();
-            //}
-            return 0;
+#if DEBUG
+            debugFileStream.Write(buffer, offset, numOfBytesReadIntoBuffer); // write down the content read for debugging
+#endif
+            Console.WriteLine("bytes read from stream: {0}", numOfBytesReadIntoBuffer);
+
+            return numOfBytesReadIntoBuffer;
+        }
+
+        public void Dispose()
+        {
+            if (response != null)
+            {
+                response.Close();
+            }
+#if DEBUG
+            if (debugFileStream != null)
+            {
+                debugFileStream.Close();
+            }
+#endif
+        }
+
+        ~MonitoredMp3WaveProvider()
+        {
+            this.Dispose();
         }
     }
 }
