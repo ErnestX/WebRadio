@@ -1,25 +1,8 @@
 ﻿using NAudio.Wave;
 using NLog;
-using NLog.Fluent;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 namespace Radio
@@ -49,34 +32,13 @@ namespace Radio
             StreamAudioFromUrl(testUrl);
         }
 
-        //void StreamAudioFromUrl(Uri streamUrl)
-        //{
-        //    var url = streamUrl.ToString();
-        //    var mf = new MediaFoundationReader(url);
-        //    var wo = new WaveOutEvent();
-        //    wo.Init(mf);
-        //    wo.Play();
-        //    Console.WriteLine("NAudio playing");
-        //}
-
         void StreamAudioFromUrl(Uri streamUrl)
         {
             waveProvider = new MonitoredMp3WaveProvider(streamUrl);
-            //waveProvider = new MediaFoundationReader(streamUrl.ToString());
-
-            //HttpWebRequest req = (HttpWebRequest)WebRequest.Create(streamUrl.ToString());
-            //HttpWebResponse tempRes = (HttpWebResponse)req.GetResponse();
-            //Stream tempStream = tempRes.GetResponseStream();
-            //byte[] largeBf = new byte[800000]; // this should be long enough to load the whole 700kb file! 
-            //int num = tempStream.Read(largeBf, 0, largeBf.Length);
-            //Console.WriteLine("loaded buffer size: {0}", num);
-            //Mp3FileReader testFileReader = new Mp3FileReader(new MemoryStream(largeBf));
-
             WaveOut wo = new WaveOut();
             wo.DesiredLatency = 700;
             wo.NumberOfBuffers = 3;
             wo.Init(waveProvider);
-            //wo.Init(testFileReader);
             wo.Play(); // TODO: Call dispose()
             Console.WriteLine("audio playing");
         }

@@ -19,12 +19,6 @@ namespace Radio
 #if DEBUG
         private Stream debugFileStream = File.Create("C:\\Users\\Jialiang\\Desktop\\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
 #endif
-
-        // testing
-        private Stream testLocalStream;
-        private byte[] largeBf;
-        private Mp3FileReader testFileReader;
-
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
 
@@ -40,13 +34,12 @@ namespace Radio
 
         public MonitoredMp3WaveProvider(Uri mp3Url)
         {
-            // init WaveFormat from a fragment of the mp3 file
             HttpWebRequest req;
             HttpWebResponse tempRes = null;
 
             // initalize stream here??????
 
-            try
+            try // init WaveFormat from a fragment of the mp3 file
             {
                 req = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
                 tempRes = (HttpWebResponse)req.GetResponse();
@@ -54,10 +47,6 @@ namespace Radio
 
                 byte[] bfr = new byte[BYTE_READ_FOR_INIT];
                 int bytesRead = tempStream.Read(bfr, 0, bfr.Length);
-                //for (int i = 0; i < BYTE_READ_FOR_INIT; i++)
-                //{
-                //    Console.WriteLine(bfr[i]);
-                //}
                 Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(bfr));
                 WaveFormat = mp3FileReader.WaveFormat;
                 Url = mp3Url;
@@ -87,25 +76,12 @@ namespace Radio
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(Url.ToString());
             response = (HttpWebResponse)req.GetResponse(); // after making this work, reuse the response from before instead of opening this new one
             stream = response.GetResponseStream();
-
-            // test by downloading the whole thing
-            //largeBf = new byte[800000];
-            //int num = stream.Read(largeBf, 0, largeBf.Length);
-            //Console.WriteLine("loaded buffer size: {0}", num);
-            //testLocalStream = new MemoryStream(largeBf);
-            //testFileReader = new Mp3FileReader(testLocalStream);
         }
 
         public int Read(byte[] buffer, int offset, int count)
         {
             int numOfBytesReadIntoBuffer;
             numOfBytesReadIntoBuffer = stream.Read(buffer, offset, count);
-            //numOfBytesReadIntoBuffer = testLocalStream.Read(buffer, offset, count);
-            //numOfBytesReadIntoBuffer = testFileReader.Read(buffer, offset, count);
-            //for (int i = 0; i < count; i++)
-            //{
-            //    Console.WriteLine(buffer[i + offset]);
-            //}
 #if DEBUG
             debugFileStream.Write(buffer, offset, numOfBytesReadIntoBuffer); // write down the content read for debugging
 #endif
