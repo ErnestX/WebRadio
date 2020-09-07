@@ -128,3 +128,11 @@
 2020-08-18 14:39:15.1992|INFO|Radio.RadioModel|connecting to URL: https://www.youtube.com/watch?v=9ORO3cnPu7k
 2020-08-18 14:39:15.2112|INFO|Radio.RadioViewModel|ViewModel: connected!
 2020-08-18 14:39:15.2192|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected
+2020-09-04 03:09:00.9334|INFO|Radio.RadioViewModel|Executing Play Command
+2020-09-04 03:09:00.9564|INFO|Radio.RadioModel|connecting to URL: https://www.youtube.com/watch?v=9ORO3cnPu7k
+2020-09-04 03:09:00.9564|INFO|Radio.RadioViewModel|ViewModel: connected!
+2020-09-04 03:09:00.9734|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected
+2020-09-04 03:11:14.3030|INFO|Radio.RadioViewModel|Executing Play Command
+2020-09-04 03:11:14.3250|INFO|Radio.RadioModel|connecting to URL: https://www.youtube.com/watch?v=9ORO3cnPu7k
+2020-09-04 03:11:14.3370|INFO|Radio.RadioViewModel|ViewModel: connected!
+2020-09-04 03:11:14.3440|INFO|Radio.MainWindow|OnStateChanged sent by: IsConnected

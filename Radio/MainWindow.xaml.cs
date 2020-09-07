@@ -13,7 +13,7 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private RadioViewModel radioViewModel;
-        private IWaveProvider waveProvider;
+        private MonitoredMp3WaveProvider waveProvider;
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -34,10 +34,10 @@ namespace Radio
 
         void StreamAudioFromUrl(Uri streamUrl)
         {
-            waveProvider = new MonitoredMp3WaveProvider(streamUrl);
+            waveProvider = new MonitoredMp3WaveProvider(streamUrl,1024,20);
             WaveOut wo = new WaveOut();
-            wo.DesiredLatency = 700;
-            wo.NumberOfBuffers = 3;
+            //wo.DesiredLatency = 500;
+            //wo.NumberOfBuffers = 3;
             wo.Init(waveProvider);
             wo.Play(); // TODO: Call dispose()
             Console.WriteLine("audio playing");
@@ -52,6 +52,12 @@ namespace Radio
                 if (this.radioViewModel.IsConnected)
                 {
                     playButton.Content = "connected!";
+
+                    //// testing: inspect the debug mp3 file
+                    //waveProvider.Dispose();
+                    //Mp3FileReader mp3FileReader = new Mp3FileReader("C:\\Users\\%USERPROFILE%\\Desktop\\radioDebug.mp3");
+                    //Console.WriteLine("Printing WaveFormat Object of the downloaded file: ");
+                    //Console.WriteLine(mp3FileReader.WaveFormat.ToString());
                 }
             }
 
