@@ -110,22 +110,33 @@ namespace Radio
             return numOfBytesReadIntoBuffer;
         }
 
-        /// <returns>false if the end of the stream has been reached, ortherwise true</returns>
-        //private bool fillABufferFromSourceStream()
-        //{
-        //    byte[] buffer = buffersManager.CheckoutNewBuffer();
-        //    int unreadBytes = this.readBytesFromStream(sourceStream, buffer, 0, buffer.Length);
-        //    if (unreadBytes <= -1)
-        //    {
-        //        // buffer is full
-        //        filledBuffers.Enqueue(buffer);
-        //    }
-        //    else
-        //    {
-        //        // buffer is not filled. remove invalid data
-
-        //    }
-        //}
+        /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
+        private bool fillABufferFromSourceStream()
+        {
+            byte[] buffer = buffersManager.CheckoutNewBuffer();
+            int unreadBytes = this.readBytesFromStream(sourceStream, buffer, 0, buffer.Length);
+            Debug.Assert(unreadBytes <= buffer.Length);
+            if (unreadBytes <= -1)
+            {
+                // buffer is full
+                filledBuffers.Enqueue(buffer);
+                return true;
+            }
+            else if (unreadBytes < buffer.Length)
+            {
+                // buffer is not completely filled. remove invalid data
+                byte[] croppedBf = new byte[buffer.Length - unreadBytes];
+                Array.Copy(buffer, croppedBf, croppedBf.Length);
+                buffersManager.RecycleUsedBuffer(buffer);
+                filledBuffers.Enqueue(croppedBf);
+                return true;
+            }
+            else
+            {
+                // nothing is read
+                return false;
+            }
+        }
 
         /// <returns>number of bytes failed to read because the end of stream is reached; -1 if all bytes are read successfully</returns>
         public int readBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
