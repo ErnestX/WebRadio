@@ -87,10 +87,8 @@ namespace Radio.UnitTests
             // recycle 5
             byte[] b1 = bfs[3];
             b1[20] = 100;
-            Array.Resize(ref b1, BUFFER_SIZE - 10);
             byte[] b2 = bfs[7];
             b2[10] = 50;
-            Array.Resize(ref b2, BUFFER_SIZE + 10);
             bfm.RecycleUsedBuffer(bfs[0]);
             bfm.RecycleUsedBuffer(bfs[3]);
             bfm.RecycleUsedBuffer(bfs[7]);

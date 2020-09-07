@@ -1,6 +1,7 @@
 ﻿using Microsoft.Scripting.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -77,11 +78,7 @@ namespace Radio
                 if (availableBufferIndexes.IndexOf(bIdx) == -1)
                 {
                     // do recycling
-                    if (allBuffers[bIdx].Length != BufferSize)
-                    {
-                        byte[] b = allBuffers[bIdx];
-                        Array.Resize(ref b, BufferSize);
-                    }
+                    Debug.Assert(ubf.Length == BufferSize);
                     availableBufferIndexes.Add(bIdx);
                 }
                 else
