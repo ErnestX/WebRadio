@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using NUnit.Framework;
 
@@ -56,6 +57,31 @@ namespace Radio.UnitTests
             Array.Copy(bfs[1], randomBf3,bfs[1].Length);
             Assert.That(() => bfm.RecycleUsedBuffer(randomBf3),
                 Throws.TypeOf<ArgumentException>().With.Message.EqualTo("This buffer doesn't belong to the buffer manager"));
+        }
+
+        [Test]
+        public void BelongToTheManager_WhenCalled_ReturnCorrectValues()
+        {
+            const int BUFFER_SIZE = 128;
+            List<byte[]> bfs = new List<byte[]>(0);
+            BuffersManager bfm = new BuffersManager(BUFFER_SIZE, 3);
+
+            for (int i = 0; i < 5; i++)
+            {
+                bfs.Add(bfm.CheckoutNewBuffer());
+            }
+
+            byte[] randomBf1 = new byte[BUFFER_SIZE - 1];
+            byte[] randomBf2 = new byte[BUFFER_SIZE];
+            byte[] randomBf3 = new byte[BUFFER_SIZE];
+            Array.Copy(bfs[1], randomBf3, bfs[1].Length);
+
+            Assert.IsTrue(bfm.BelongToTheManager(bfs[2]));
+            Assert.IsTrue(bfm.BelongToTheManager(bfs[4]));
+            Assert.IsFalse(bfm.BelongToTheManager(null));
+            Assert.IsFalse(bfm.BelongToTheManager(randomBf1));
+            Assert.IsFalse(bfm.BelongToTheManager(randomBf2));
+            Assert.IsFalse(bfm.BelongToTheManager(randomBf3));
         }
 
         [Test]

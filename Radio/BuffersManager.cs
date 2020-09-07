@@ -78,7 +78,7 @@ namespace Radio
                 if (availableBufferIndexes.IndexOf(bIdx) == -1)
                 {
                     // do recycling
-                    Debug.Assert(ubf.Length == BufferSize);
+                    Debug.Assert(ubf.Length == BufferSize); // always true because array cannot be resized and the address can't be reallocated to another array because buffersmanager keeps the reference
                     availableBufferIndexes.Add(bIdx);
                 }
                 else
@@ -96,6 +96,12 @@ namespace Radio
         {
             allBuffers.Add(new byte[BufferSize]);
             availableBufferIndexes.Add(allBuffers.Count - 1);
+        }
+
+        public bool BelongToTheManager(byte[] bf)
+        {
+            int bIdx = allBuffers.IndexOf(bf);
+            return bIdx > -1;
         }
     }
 }
