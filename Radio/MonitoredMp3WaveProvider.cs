@@ -1,5 +1,6 @@
 ﻿using Microsoft.Scripting;
 using NAudio.Wave;
+using NLog.Targets.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,11 +19,12 @@ namespace Radio
 
         private HttpWebResponse response;
         private Stream sourceStream;
-        private Stream bufferedStream;
-        private int streamBufferedPosition;
+        //private Stream bufferedStream;
+        //private int streamReadPosition;
 
         private BuffersManager buffersManager;
-        private byte[] readBuffer;
+        private int beingReadBufferUnreadIndexBookmark;
+        private byte[] beingReadBuffer;
         private Queue<byte[]> filledBuffers;
         private byte[] downloadingBuffer;
 #if DEBUG
@@ -33,7 +35,7 @@ namespace Radio
 
         public int SpeedCalcUnitSize { get; }
         private int NumOfUnitPerBuffer { get; }
-        public int BufferSize
+        public int DefaultBufferSize
         {
             get
             {
@@ -83,40 +85,104 @@ namespace Radio
             NumOfUnitPerBuffer = numOfUnitPerBuffer;
             this.InitializeBuffers();
 
-            streamBufferedPosition = 0;
+            this.StartBuffering();
+
+            beingReadBufferUnreadIndexBookmark = 0;
+            //streamReadPosition = 0;
         }
 
         private void InitializeStream()
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(Url.ToString());
-            response = (HttpWebResponse)req.GetResponse(); 
+            response = (HttpWebResponse)req.GetResponse();
             sourceStream = response.GetResponseStream();
         }
 
         private void InitializeBuffers()
         {
-            buffersManager = new BuffersManager(BufferSize, INITIAL_BUFFER_NUM);
+            buffersManager = new BuffersManager(DefaultBufferSize, INITIAL_BUFFER_NUM);
+            filledBuffers = new Queue<byte[]>();
+        }
+
+        private void StartBuffering()
+        {
+            // start with two buffers to guarantee at least one filled buffer in reserve
+            this.FillABufferFromSourceStream();
+            this.FillABufferFromSourceStream();
         }
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            int numOfBytesReadIntoBuffer;
-            numOfBytesReadIntoBuffer = sourceStream.Read(buffer, offset, count);
-#if DEBUG
-            debugFileStream.Write(buffer, offset, numOfBytesReadIntoBuffer); // write down the content read for debugging
-#endif
-            Console.WriteLine("bytes read from stream: {0}", numOfBytesReadIntoBuffer);
+            if (filledBuffers.Count < 1)
+            {
+                // TODO: wait for download
+                throw new NotImplementedException();
+            }
+            
+            Debug.Assert(filledBuffers.Count > 0);
+            int writtenByteCount = 0;
+            writeDataFromFilledBuffers(ref writtenByteCount);
 
-            return numOfBytesReadIntoBuffer;
+            if (filledBuffers.Count < 1)
+            {
+                this.FillABufferFromSourceStream();
+                this.FillABufferFromSourceStream();
+            }
+            else if (filledBuffers.Count < 2)
+            {
+                this.FillABufferFromSourceStream();
+            }
+
+            return writtenByteCount;
+
+            void writeDataFromFilledBuffers(ref int wbc)
+            {
+                if (filledBuffers.Count > 0)
+                {
+                    // still have a filled buffer left
+                    if (beingReadBufferUnreadIndexBookmark == 0)
+                    {
+                        // this is a new buffer
+                        beingReadBuffer = filledBuffers.Dequeue();
+                    }
+
+                    Debug.Assert(beingReadBuffer != null);
+                    if (count <= beingReadBuffer.Length - beingReadBufferUnreadIndexBookmark)
+                    {
+                        // this whole buffer will fit; write the rest of the buffer from the bookmark and clear bookmark
+                        int bytesToWrite = beingReadBuffer.Length;
+                        Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
+                        wbc += bytesToWrite;
+                        beingReadBufferUnreadIndexBookmark = 0;
+
+                        if (buffersManager.BelongToTheManager(beingReadBuffer))
+                        {
+                            buffersManager.RecycleUsedBuffer(beingReadBuffer);
+                        }
+
+                        writeDataFromFilledBuffers(ref wbc); // continue the recursion
+                    }
+                    else
+                    {
+                        // this whole buffer is more than needed; write as much data as possible, bookmark the index
+                        int bytesToWrite = count - wbc;
+                        Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
+                        wbc += bytesToWrite;
+                        beingReadBufferUnreadIndexBookmark = bytesToWrite;
+                        // all bytes written; end recursion
+                    }
+                } // else, we don't have a filled buffer left (not enough data); end recursion
+            }
         }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
-        private bool fillABufferFromSourceStream()
+        private bool FillABufferFromSourceStream()
         {
             byte[] buffer = buffersManager.CheckoutNewBuffer();
-            int unreadBytes = this.readBytesFromStream(sourceStream, buffer, 0, buffer.Length);
+            int unreadBytes = this.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
             Debug.Assert(unreadBytes <= buffer.Length);
-            if (unreadBytes <= -1)
+
+            if (unreadBytes == -1)
             {
                 // buffer is full
                 filledBuffers.Enqueue(buffer);
@@ -139,7 +205,7 @@ namespace Radio
         }
 
         /// <returns>number of bytes failed to read because the end of stream is reached; -1 if all bytes are read successfully</returns>
-        public int readBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
+        public int ReadBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
         {
          // TODO: validify input parameters 
          // TODO: unit tests
@@ -150,9 +216,10 @@ namespace Radio
             const int TIMES_READ_ZERO_BYTE_BEFORE_ABORT = 3;
 
             int bytesYetToRead = bytesToRead;
+            int readOffset = offset;
             while (bytesYetToRead > 0)
             {
-                bytesRead = stream.Read(buffer, offset, bytesYetToRead);
+                bytesRead = stream.Read(buffer, readOffset, bytesYetToRead);
                 totalBytesRead += bytesRead;
 
                 if (bytesRead <= 0)
@@ -165,7 +232,7 @@ namespace Radio
                     return bytesYetToRead;
                 }
 
-                offset += bytesRead;
+                readOffset += bytesRead;
                 bytesYetToRead = bytesToRead - totalBytesRead;
                 Debug.Assert(bytesYetToRead >= 0);
             } 
