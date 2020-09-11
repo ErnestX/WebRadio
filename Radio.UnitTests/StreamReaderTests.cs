@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Radio.UnitTests
@@ -12,23 +14,46 @@ namespace Radio.UnitTests
         }
 
         [Test]
-        public void ReadBytesFromStream_WhenTheStreamIsAMultipleOfTheBufferSize_ReadCorrectly()
+        public void ReadBytesFromStream_InvalidInputs_ThrowExceptions()
         {
-            int bufferSize = 16;
-            byte[] randomBytes = new byte[bufferSize * 1000];
-            Random rnd = new Random();
-            rnd.NextBytes(randomBytes);
 
-            using (var testStream = new MemoryStream(randomBytes))
-            {
-                //MonitoredMp3WaveProvider mwp = new MonitoredMp3WaveProvider()
-            }
         }
 
         [Test]
-        public void ReadBytesFromStream_WhenTheStreamIsNotAMultipleOfTheBufferSize_ReadCorrectly()
+        public void ReadBytesFromStream_NotOverRead_ReadAndOutputCorrectly()
         {
+            byte[] randomBytes = new byte[1000];
+            Random rnd = new Random();
+            rnd.NextBytes(randomBytes);
 
+            byte[] bf = new byte[1000];
+            using (var testStream = new MemoryStream(randomBytes))
+            {
+                int bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 0, 500);
+                Assert.AreEqual(-1, bytesUnread);
+                bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 500, 500);
+                Assert.AreEqual(-1, bytesUnread);
+            }
+            Assert.IsTrue(bf.SequenceEqual(randomBytes));
+        }
+
+        [Test]
+        public void ReadBytesFromStream_OverRead_ReadAndOutputCorrectly()
+        {
+            byte[] randomBytes = new byte[900];
+            Random rnd = new Random();
+            rnd.NextBytes(randomBytes);
+
+            byte[] bf = new byte[1000];
+            using (var testStream = new MemoryStream(randomBytes))
+            {
+                int bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 0, 500);
+                Assert.AreEqual(-1, bytesUnread);
+                bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 500, 500);
+                Assert.AreEqual(100, bytesUnread);
+            }
+            Array.Resize(ref bf, 900);
+            Assert.IsTrue(bf.SequenceEqual(randomBytes));
         }
     }
 }

@@ -90,6 +90,7 @@
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="RadioModel.cs" />
     <Compile Include="RadioViewModel.cs" />
+    <Compile Include="StreamReader.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
