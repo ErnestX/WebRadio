@@ -27,7 +27,7 @@ namespace Radio
         private byte[] beingReadBuffer;
         private Queue<byte[]> filledBuffers;
 #if DEBUG
-        private Stream debugFileStream = File.Create("C:\\Users\\%USERPROFILE%\\Desktop\\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
+        //private Stream debugFileStream = File.Create("C:\\Users\\%USERPROFILE%\\Desktop\\radioDebug.mp3"); // TODO: Change to a proper directory. for writting down the downloaded stream for debugging. 
 #endif
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
@@ -106,8 +106,12 @@ namespace Radio
         {
             if (filledBuffers.Count < 1)
             {
-                // TODO: wait for download
-                throw new NotImplementedException();
+                // TODO: stub. wait for download
+                bool result = this.FillABufferFromSourceStream();
+                if (! result)
+                {
+                    return 0;
+                }
             }
             
             Debug.Assert(filledBuffers.Count > 0);
@@ -138,10 +142,11 @@ namespace Radio
                     }
 
                     Debug.Assert(beingReadBuffer != null);
-                    if (count <= beingReadBuffer.Length - beingReadBufferUnreadIndexBookmark)
+                    int unreadBytesInBuffer = beingReadBuffer.Length - beingReadBufferUnreadIndexBookmark;
+                    if (count >= unreadBytesInBuffer)
                     {
                         // this whole buffer will fit; write the rest of the buffer from the bookmark and clear bookmark
-                        int bytesToWrite = beingReadBuffer.Length;
+                        int bytesToWrite = unreadBytesInBuffer;
                         Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
                         wbc += bytesToWrite;
                         beingReadBufferUnreadIndexBookmark = 0;
@@ -202,10 +207,10 @@ namespace Radio
                 response.Close();
             }
 #if DEBUG
-            if (debugFileStream != null)
-            {
-                debugFileStream.Close();
-            }
+            //if (debugFileStream != null)
+            //{
+            //    debugFileStream.Close();
+            //}
 #endif
         }
 
