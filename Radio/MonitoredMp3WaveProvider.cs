@@ -182,7 +182,7 @@ namespace Radio
             int unreadBytes = StreamReader.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
             Debug.Assert(unreadBytes <= buffer.Length);
 
-            if (unreadBytes == -1)
+            if (unreadBytes == 0)
             {
                 // buffer is full
                 filledBuffers.Enqueue(buffer);

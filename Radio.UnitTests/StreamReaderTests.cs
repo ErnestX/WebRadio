@@ -14,12 +14,6 @@ namespace Radio.UnitTests
         }
 
         [Test]
-        public void ReadBytesFromStream_InvalidInputs_ThrowExceptions()
-        {
-
-        }
-
-        [Test]
         public void ReadBytesFromStream_NotOverRead_ReadAndOutputCorrectly()
         {
             byte[] randomBytes = new byte[1000];
@@ -30,9 +24,9 @@ namespace Radio.UnitTests
             using (var testStream = new MemoryStream(randomBytes))
             {
                 int bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 0, 500);
-                Assert.AreEqual(-1, bytesUnread);
+                Assert.AreEqual(0, bytesUnread);
                 bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 500, 500);
-                Assert.AreEqual(-1, bytesUnread);
+                Assert.AreEqual(0, bytesUnread);
             }
             Assert.IsTrue(bf.SequenceEqual(randomBytes));
         }
@@ -48,7 +42,7 @@ namespace Radio.UnitTests
             using (var testStream = new MemoryStream(randomBytes))
             {
                 int bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 0, 500);
-                Assert.AreEqual(-1, bytesUnread);
+                Assert.AreEqual(0, bytesUnread);
                 bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 500, 500);
                 Assert.AreEqual(100, bytesUnread);
             }

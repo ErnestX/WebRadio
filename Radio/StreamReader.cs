@@ -10,11 +10,10 @@ namespace Radio
 {
     class StreamReader
     {
-        /// <returns>number of bytes failed to read because the end of stream is reached; -1 if all bytes are read successfully</returns>
+        /// <summary>read specified bytes from stream</summary>
+        /// <returns>number of bytes failed to read because the end of stream is reached; 0 if all bytes are read successfully</returns>
         static public int ReadBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
         {
-            // TODO: validify input parameters 
-            // TODO: unit tests
             int bytesRead;
             int totalBytesRead = 0;
 
@@ -43,7 +42,7 @@ namespace Radio
                 Debug.Assert(bytesYetToRead >= 0);
             }
 
-            return -1;
+            return 0;
         }
     }
 }
