@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class MonitoredMp3WaveProvider : IWaveProvider, IDisposable
+    class Mp3WaveProvider : IWaveProvider, IDisposable
     {
         const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
         const int INITIAL_BUFFER_NUM = 4;
@@ -26,28 +26,21 @@ namespace Radio
         private int beingReadBufferUnreadIndexBookmark;
         private byte[] beingReadBuffer;
         private Queue<byte[]> filledBuffers;
-        private byte[] downloadingBuffer;
 #if DEBUG
         private Stream debugFileStream = File.Create("C:\\Users\\%USERPROFILE%\\Desktop\\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
 #endif
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
 
-        public int SpeedCalcUnitSize { get; }
-        private int NumOfUnitPerBuffer { get; }
-        public int DefaultBufferSize
-        {
-            get
-            {
-                return this.SpeedCalcUnitSize * this.NumOfUnitPerBuffer;
-            }
-        }
+        //public int SpeedCalcUnitSize { get; }
+        //private int NumOfUnitPerBuffer { get; }
+        public int DefaultBufferSize {get;}
 
 
-        public MonitoredMp3WaveProvider(Uri mp3Url, int speedCalcUnitSize, int numOfUnitPerBuffer)
+        public Mp3WaveProvider(Uri mp3Url, int bufferSize)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
-            HttpWebResponse tempRes = (HttpWebResponse)req.GetResponse();
+            HttpWebRequest req;
+            HttpWebResponse tempRes = null;
 
             try // init WaveFormat from a fragment of the mp3 file
             {
@@ -81,14 +74,12 @@ namespace Radio
 
             this.InitializeStream();
 
-            SpeedCalcUnitSize = speedCalcUnitSize;
-            NumOfUnitPerBuffer = numOfUnitPerBuffer;
+            DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
 
             this.StartBuffering();
 
             beingReadBufferUnreadIndexBookmark = 0;
-            //streamReadPosition = 0;
         }
 
         private void InitializeStream()
@@ -218,7 +209,7 @@ namespace Radio
 #endif
         }
 
-        ~MonitoredMp3WaveProvider()
+        ~Mp3WaveProvider()
         {
             this.Dispose();
         }

@@ -13,7 +13,7 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private RadioViewModel radioViewModel;
-        private MonitoredMp3WaveProvider waveProvider;
+        private Mp3WaveProvider waveProvider;
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -34,7 +34,7 @@ namespace Radio
 
         void StreamAudioFromUrl(Uri streamUrl)
         {
-            waveProvider = new MonitoredMp3WaveProvider(streamUrl,1024,20);
+            waveProvider = new Mp3WaveProvider(streamUrl, 20480);
             WaveOut wo = new WaveOut();
             //wo.DesiredLatency = 500;
             //wo.NumberOfBuffers = 3;
