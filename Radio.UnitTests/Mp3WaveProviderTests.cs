@@ -41,6 +41,14 @@ namespace Radio.UnitTests
             ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); // error: destination array not long enough
         }
 
+        [Test]
+        public void Read_BufferSizeSmallerThanReadIncrement_OutputCorrectly()
+        {
+            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 2048);
+            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 2049);
+            ReadTestHelper(VALID_MP3_STREAM_1, 512, 4095);
+        }
+
         public void ReadTestHelper(string url, int bufferSize, int readIncrement)
         {
             HttpWebRequest req;
