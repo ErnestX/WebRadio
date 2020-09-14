@@ -31,14 +31,14 @@ namespace Radio.UnitTests
             ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1024);
             ReadTestHelper(VALID_MP3_STREAM_1, 4096, 4096);
             ReadTestHelper(VALID_MP3_STREAM_1, 4095, 4095);
+            ReadTestHelper(VALID_MP3_STREAM_1, 2083, 2083);
         }
 
         [Test]
         public void Read_BufferSizeLargerThanReadIncrement_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024);
-            ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024);
-            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); 
+            ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); // error: destination array not long enough
+            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); // error: destination array not long enough
         }
 
         public void ReadTestHelper(string url, int bufferSize, int readIncrement)
