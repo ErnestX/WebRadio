@@ -101,7 +101,7 @@ namespace Radio
         {
             // start with two buffers to guarantee at least one filled buffer in reserve
             this.FillABufferFromSourceStream();
-            this.FillABufferFromSourceStream();
+            //this.FillABufferFromSourceStream();
         }
 
         public int Read(byte[] buffer, int offset, int count)
@@ -123,20 +123,20 @@ namespace Radio
             if (filledBuffers.Count < 1)
             {
                 this.FillABufferFromSourceStream();
-                this.FillABufferFromSourceStream();
+                //this.FillABufferFromSourceStream();
             }
             else if (filledBuffers.Count < 2)
             {
                 this.FillABufferFromSourceStream();
             }
 
+            Logger.Debug("Read returns with result: {0}", writtenByteCount);
             return writtenByteCount;
 
             void writeDataFromFilledBuffers(ref int wbc)
             {
                 if (filledBuffers.Count > 0)
                 {
-                    // still have a filled buffer left
                     if (beingReadBufferUnreadIndexBookmark == 0)
                     {
                         // this is a new buffer
@@ -144,13 +144,15 @@ namespace Radio
                     }
 
                     Debug.Assert(beingReadBuffer != null);
+                    Debug.Assert(beingReadBuffer.Length > beingReadBufferUnreadIndexBookmark);
+
                     int unreadBytesInBuffer = beingReadBuffer.Length - beingReadBufferUnreadIndexBookmark;
                     if (count >= unreadBytesInBuffer)
                     {
                         // this whole buffer will fit; write the rest of the buffer from the bookmark and clear bookmark
                         int bytesToWrite = unreadBytesInBuffer;
 
-                        Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
+                        Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount so far: {4}, bytesToWrite: {5}",
                             beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
 
                         Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
