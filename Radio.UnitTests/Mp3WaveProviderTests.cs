@@ -37,16 +37,18 @@ namespace Radio.UnitTests
         [Test]
         public void Read_BufferSizeLargerThanReadIncrement_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1024);
-            //ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); // error: destination array not long enough
-            //ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); // error: destination array not long enough
-            //ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); // error: not equal at index 2048.. or something
-            //ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024);
+            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1024); // control case
+            ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); // error: destination array not long enough
+            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); // error: destination array not long enough
+            ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); // error: inequity found at index 2048
+            ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); // error: destination array not long enough
+            ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); // error: inequity found at index: 3072
         }
 
         [Test]
         public void Read_BufferSizeSmallerThanReadIncrement_OutputCorrectly()
         {
+            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1025);
             ReadTestHelper(VALID_MP3_STREAM_1, 1024, 2048);
             ReadTestHelper(VALID_MP3_STREAM_1, 1024, 2049);
             ReadTestHelper(VALID_MP3_STREAM_1, 512, 4095);

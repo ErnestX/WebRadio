@@ -130,7 +130,7 @@ namespace Radio
                 this.FillABufferFromSourceStream();
             }
 
-            Logger.Debug("Read returns with result: {0}", writtenByteCount);
+            Logger.Debug(".......Read returns with result: {0}", writtenByteCount);
             return writtenByteCount;
 
             void writeDataFromFilledBuffers(ref int wbc)
