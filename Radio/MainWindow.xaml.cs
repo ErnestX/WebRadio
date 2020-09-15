@@ -16,7 +16,7 @@ namespace Radio
         private Mp3WaveProvider waveProvider;
 
         // create and set up logger
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
         public MainWindow()
         {

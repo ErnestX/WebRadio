@@ -20,7 +20,7 @@ namespace Radio
         public delegate void StateChangedHandler(object sender, EventArgs e);
         public event StateChangedHandler Connected;
 
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
         public RadioModel()
         {

@@ -36,7 +36,7 @@ namespace Radio
         //private int NumOfUnitPerBuffer { get; }
         public int DefaultBufferSize {get;}
 
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Mp3WaveProviderDebug");
 
 
         public Mp3WaveProvider(Uri mp3Url, int bufferSize)
@@ -194,6 +194,7 @@ namespace Radio
             {
                 // buffer is full
                 filledBuffers.Enqueue(buffer);
+                Logger.Debug(">>>>>>>Downloaded a filled buffer; filledBuffers count: {0}", filledBuffers.Count);
                 return true;
             }
             else if (unreadBytes < buffer.Length)
@@ -203,6 +204,7 @@ namespace Radio
                 Array.Copy(buffer, croppedBf, croppedBf.Length);
                 buffersManager.RecycleUsedBuffer(buffer);
                 filledBuffers.Enqueue(croppedBf);
+                Logger.Debug(">>>>>>>Downloaded a filled buffer; filledBuffers count: {0}", filledBuffers.Count);
                 return true;
             }
             else

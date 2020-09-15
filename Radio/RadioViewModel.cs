@@ -33,7 +33,7 @@ namespace Radio
         public ICommand PlayCommand { protected set; get; }
 
         // create and set up logger
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
         //constructor
         public RadioViewModel()

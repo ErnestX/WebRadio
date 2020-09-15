@@ -12,7 +12,7 @@ namespace Radio
 {
     public static class SoundCloudResourceFinder
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
         public static Uri FindAudioResBySCLink(Uri url)
         {
             
