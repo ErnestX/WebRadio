@@ -194,7 +194,7 @@ namespace Radio
             {
                 // buffer is full
                 filledBuffers.Enqueue(buffer);
-                Logger.Debug(">>>>>>>Downloaded a filled buffer; filledBuffers count: {0}", filledBuffers.Count);
+                Logger.Debug(">>>>>>>Downloaded a buffer; filledBuffers count: {0}", filledBuffers.Count);
                 return true;
             }
             else if (unreadBytes < buffer.Length)
@@ -204,7 +204,7 @@ namespace Radio
                 Array.Copy(buffer, croppedBf, croppedBf.Length);
                 buffersManager.RecycleUsedBuffer(buffer);
                 filledBuffers.Enqueue(croppedBf);
-                Logger.Debug(">>>>>>>Downloaded a filled buffer; filledBuffers count: {0}", filledBuffers.Count);
+                Logger.Debug(">>>>>>>Downloaded a buffer; filledBuffers count: {0}", filledBuffers.Count);
                 return true;
             }
             else
