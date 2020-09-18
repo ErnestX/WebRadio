@@ -152,7 +152,7 @@ namespace Radio
                         // this whole buffer will fit; write the rest of the buffer from the bookmark and clear bookmark
                         int bytesToWrite = unreadBytesInBuffer;
 
-                        Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount so far: {4}, bytesToWrite: {5}",
+                        Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
                             beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
 
                         Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);

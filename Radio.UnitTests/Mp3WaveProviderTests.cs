@@ -39,10 +39,10 @@ namespace Radio.UnitTests
         {
             //ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1024); // control case
             //ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); // pass
+            ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); // error: inequity found at index 2048; also: read length mismatch
+            //ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); // error: inequity found at index: 762880
+            //ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); // pass
             //ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); // error: inequity found at index: 4096
-            //ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); // error: inequity found at index 2048
-            //ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); // error: inequity found at index: 762880; was: destination array not long enough
-            ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); // pass; was: inequity found at index: 3072
         }
 
         [Test]
@@ -67,29 +67,30 @@ namespace Radio.UnitTests
                 Stream tempStream = tempRes.GetResponseStream();
 
                 byte[] expectedBuffer = new byte[1024 * 800];
-                int offset = 0;
+                int expectedOffset = 0;
                 int bytesRead;
                 do
                 {
-                    bytesRead = tempStream.Read(expectedBuffer, offset, readIncrement);
-                    offset += bytesRead;
+                    bytesRead = tempStream.Read(expectedBuffer, expectedOffset, readIncrement);
+                    expectedOffset += bytesRead;
                 } while (bytesRead > 0);
 
 
                 mwp = new Mp3WaveProvider(new Uri(url), bufferSize);
                 byte[] testBuffer = new byte[1024 * 800];
-                offset = 0;
+                int testOffset = 0;
                 do
                 {
-                    bytesRead = mwp.Read(testBuffer, offset, readIncrement);
-                    offset += bytesRead;
+                    bytesRead = mwp.Read(testBuffer, testOffset, readIncrement);
+                    testOffset += bytesRead;
                 } while (bytesRead > 0);
 
                 Assert.AreEqual(256, expectedBuffer.Distinct().Count());
                 Assert.IsTrue(testBuffer.Length == expectedBuffer.Length);
+                Assert.AreEqual(expectedOffset, testOffset, "total read length mismatch");
                 for (int i = 0; i < expectedBuffer.Length; i++)
-                {       
-                    Assert.AreEqual(expectedBuffer[i], testBuffer[i],String.Format("inequity found at index: {0}", i));
+                {
+                    Assert.AreEqual(expectedBuffer[i], testBuffer[i], String.Format("inequity found at index: {0}", i));
                 }
             }
             finally
