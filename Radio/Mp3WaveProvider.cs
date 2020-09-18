@@ -176,7 +176,7 @@ namespace Radio
 
                         Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
                         wbc += bytesToWrite;
-                        beingReadBufferUnreadIndexBookmark = bytesToWrite;
+                        beingReadBufferUnreadIndexBookmark += bytesToWrite;
                         // all bytes written; end recursion
                     }
                 } // else, we don't have a filled buffer left (not enough data); end recursion
