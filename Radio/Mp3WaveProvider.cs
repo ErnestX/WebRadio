@@ -147,14 +147,10 @@ namespace Radio
                     Debug.Assert(beingReadBuffer.Length > beingReadBufferUnreadIndexBookmark);
 
                     int unreadBytesInBuffer = beingReadBuffer.Length - beingReadBufferUnreadIndexBookmark;
-                    if (count >= unreadBytesInBuffer)
+                    if ((count - wbc) >= unreadBytesInBuffer)
                     {
                         // this whole buffer will fit; write the rest of the buffer from the bookmark and clear bookmark
                         int bytesToWrite = unreadBytesInBuffer;
-
-                        Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
-                            beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
-
                         Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
                         wbc += bytesToWrite;
                         beingReadBufferUnreadIndexBookmark = 0;
@@ -164,19 +160,21 @@ namespace Radio
                             buffersManager.RecycleUsedBuffer(beingReadBuffer);
                         }
 
+                        Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
+                            beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
+
                         writeDataFromFilledBuffers(ref wbc); // continue the recursion
                     }
                     else
                     {
                         // this whole buffer is more than needed; write as much data as possible, bookmark the index
                         int bytesToWrite = count - wbc;
-
-                        Logger.Debug("[else] beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
-                            beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
-
                         Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
                         wbc += bytesToWrite;
                         beingReadBufferUnreadIndexBookmark += bytesToWrite;
+
+                        Logger.Debug("[else] beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
+                            beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
                         // all bytes written; end recursion
                     }
                 } // else, we don't have a filled buffer left (not enough data); end recursion
