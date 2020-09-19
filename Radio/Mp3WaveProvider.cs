@@ -102,8 +102,8 @@ namespace Radio
         private void StartBuffering()
         {
             // start with two buffers to guarantee at least one filled buffer in reserve
-            this.FillABufferFromSourceStream();
-            this.FillABufferFromSourceStream();
+            this.FillABufferFromSourceStreamAsync();
+            this.FillABufferFromSourceStreamAsync();
         }
 
         public int Read(byte[] buffer, int offset, int count)
@@ -113,12 +113,12 @@ namespace Radio
 
             if (filledBuffers.Count < 1)
             {
-                this.FillABufferFromSourceStream();
-                this.FillABufferFromSourceStream();
+                this.FillABufferFromSourceStreamAsync();
+                this.FillABufferFromSourceStreamAsync();
             }
             else if (filledBuffers.Count < 2)
             {
-                this.FillABufferFromSourceStream();
+                this.FillABufferFromSourceStreamAsync();
             }
 
             Logger.Debug(".......Read returns with result: {0}", writtenByteCount);
@@ -177,10 +177,10 @@ namespace Radio
         }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
-        private bool FillABufferFromSourceStream()
+        private async Task<bool> FillABufferFromSourceStreamAsync()
         {
             byte[] buffer = buffersManager.CheckoutNewBuffer();
-            int unreadBytes = StreamReader.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
+            int unreadBytes = await StreamReader.ReadBytesFromStreamAsync(sourceStream, buffer, 0, buffer.Length);
             Debug.Assert(unreadBytes <= buffer.Length);
 
             if (unreadBytes == 0)

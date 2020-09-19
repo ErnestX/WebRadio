@@ -12,7 +12,7 @@ namespace Radio
     {
         /// <summary>read specified bytes from stream</summary>
         /// <returns>number of bytes failed to read because the end of stream is reached; 0 if all bytes are read successfully</returns>
-        static public int ReadBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
+        static public async Task<int> ReadBytesFromStreamAsync(Stream stream, byte[] buffer, int offset, int bytesToRead)
         {
             int bytesRead;
             int totalBytesRead = 0;
@@ -24,10 +24,10 @@ namespace Radio
             int readOffset = offset;
             while (bytesYetToRead > 0)
             {
-                bytesRead = stream.Read(buffer, readOffset, bytesYetToRead);
+                bytesRead = await stream.ReadAsync(buffer, readOffset, bytesYetToRead);
                 totalBytesRead += bytesRead;
 
-                if (bytesRead <= 0)
+                if (bytesRead == 0)
                 {
                     timesReadZeroByte++;
                 }
