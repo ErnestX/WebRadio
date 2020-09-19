@@ -28,7 +28,7 @@ namespace Radio
         private byte[] beingReadBuffer;
         private Queue<byte[]> filledBuffers;
 #if DEBUG
-        //private Stream debugFileStream = File.Create("C:\\Users\\%USERPROFILE%\\Desktop\\radioDebug.mp3"); // TODO: Change to a proper directory. for writting down the downloaded stream for debugging. 
+        private Stream debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
 #endif
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
@@ -80,7 +80,7 @@ namespace Radio
             DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
 
-            this.StartBuffering();
+            this.StartBufferingAsync();
 
             beingReadBufferUnreadIndexBookmark = 0;
             requestNextBuffer = true;
@@ -99,11 +99,11 @@ namespace Radio
             filledBuffers = new Queue<byte[]>();
         }
 
-        private void StartBuffering()
+        private async Task StartBufferingAsync()
         {
             // start with two buffers to guarantee at least one filled buffer in reserve
-            this.FillABufferFromSourceStreamAsync();
-            this.FillABufferFromSourceStreamAsync();
+            await this.FillABufferFromSourceStreamAsync();
+            await this.FillABufferFromSourceStreamAsync();
         }
 
         public int Read(byte[] buffer, int offset, int count)
@@ -149,6 +149,9 @@ namespace Radio
                         beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
 
                     Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
+#if DEBUG
+                    debugFileStream.Write(beingReadBuffer, beingReadBufferUnreadIndexBookmark, bytesToWrite);
+#endif
                     wbc += bytesToWrite;
                     beingReadBufferUnreadIndexBookmark = 0;
 
@@ -169,6 +172,9 @@ namespace Radio
                         beingReadBuffer.Length, beingReadBufferUnreadIndexBookmark, buffer.Length, offset, wbc, bytesToWrite);
 
                     Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
+#if DEBUG
+                    debugFileStream.Write(beingReadBuffer, beingReadBufferUnreadIndexBookmark, bytesToWrite);
+#endif
                     wbc += bytesToWrite;
                     beingReadBufferUnreadIndexBookmark += bytesToWrite;
                     // all bytes written; end recursion
@@ -214,10 +220,10 @@ namespace Radio
                 response.Close();
             }
 #if DEBUG
-            //if (debugFileStream != null)
-            //{
-            //    debugFileStream.Close();
-            //}
+            if (debugFileStream != null)
+            {
+                debugFileStream.Close();
+            }
 #endif
         }
 
