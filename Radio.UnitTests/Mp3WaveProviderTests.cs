@@ -37,12 +37,12 @@ namespace Radio.UnitTests
         [Test]
         public void Read_BufferSizeLargerThanReadIncrement_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1024); // control case
-            ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); // error: inequity found at index: 763904, which is the end of actual length
-            ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); // error: inequity found at index: 763904; was: pass 
-            ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); // error: inequity found at index: 763904, which is the end of actual length
-            ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); // error: inequity found at index: 762880, which is the end of actual length
-            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024); // error: inequity found at index: 761856, which is the end; was: 4096
+            ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); 
+            ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); 
+            ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); 
+            ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); 
+            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024);
+            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 2047);
         }
 
         [Test]
