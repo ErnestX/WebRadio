@@ -108,17 +108,17 @@ namespace Radio
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            if (filledBuffers.Count < 1)
-            {
-                // TODO: stub. wait for download
-                bool result = this.FillABufferFromSourceStream();
-                if (! result)
-                {
-                    return 0;
-                }
-            }
-            
-            Debug.Assert(filledBuffers.Count > 0);
+            //if (filledBuffers.Count < 1)
+            //{
+            //    // TODO: stub. wait for download
+            //    bool result = this.FillABufferFromSourceStream();
+            //    if (!result)
+            //    {
+            //        return 0;
+            //    }
+            //}
+
+            //Debug.Assert(filledBuffers.Count > 0);
             int writtenByteCount = 0;
             writeDataFromFilledBuffers(ref writtenByteCount);
 
