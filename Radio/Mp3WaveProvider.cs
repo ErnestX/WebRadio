@@ -80,7 +80,7 @@ namespace Radio
             DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
 
-            this.StartBufferingAsync();
+            this.StartBuffering();
 
             beingReadBufferUnreadIndexBookmark = 0;
             requestNextBuffer = true;
@@ -99,11 +99,11 @@ namespace Radio
             filledBuffers = new Queue<byte[]>();
         }
 
-        private async Task StartBufferingAsync()
+        private void StartBuffering()
         {
             // start with two buffers to guarantee at least one filled buffer in reserve
-            await this.FillABufferFromSourceStreamAsync();
-            await this.FillABufferFromSourceStreamAsync();
+            this.FillABufferFromSourceStreamAsync();
+            this.FillABufferFromSourceStreamAsync();
         }
 
         public int Read(byte[] buffer, int offset, int count)
