@@ -41,8 +41,7 @@ namespace Radio.UnitTests
             ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); 
             ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); 
             ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); 
-            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 1024);
-            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 2047);
+            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 512);
         }
 
         [Test]

@@ -27,6 +27,7 @@ namespace Radio
         private bool requestNextBuffer;
         private byte[] beingReadBuffer;
         private Queue<byte[]> filledBuffers;
+        private Task<bool> downloadTask;
 #if DEBUG
         private Stream debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
 #endif
@@ -84,6 +85,7 @@ namespace Radio
 
             beingReadBufferUnreadIndexBookmark = 0;
             requestNextBuffer = true;
+            downloadTask = null;
     }
 
         private void InitializeStream()
@@ -102,8 +104,13 @@ namespace Radio
         private void StartBuffering()
         {
             // start with two buffers to guarantee at least one filled buffer in reserve
-            this.FillABufferFromSourceStreamAsync();
-            this.FillABufferFromSourceStreamAsync();
+            if (downloadTask == null || downloadTask.IsCompleted)
+            {
+                downloadTask = this.FillABufferFromSourceStreamAsync();
+                downloadTask.Wait();
+                downloadTask = this.FillABufferFromSourceStreamAsync();
+                downloadTask.Wait();
+            }
         }
 
         public int Read(byte[] buffer, int offset, int count)
@@ -111,14 +118,22 @@ namespace Radio
             int writtenByteCount = 0;
             writeDataFromFilledBuffers(ref writtenByteCount);
 
+            // TODO: make sure the previous download have finished before calling new ones. maybe keep track of the status of task files. 
             if (filledBuffers.Count < 1)
             {
-                this.FillABufferFromSourceStreamAsync();
-                this.FillABufferFromSourceStreamAsync();
+                if (downloadTask == null || downloadTask.IsCompleted)
+                {
+                    downloadTask = this.FillABufferFromSourceStreamAsync();
+                    downloadTask.Wait();
+                    downloadTask = this.FillABufferFromSourceStreamAsync();
+                }
             }
             else if (filledBuffers.Count < 2)
             {
-                this.FillABufferFromSourceStreamAsync();
+                if (downloadTask == null || downloadTask.IsCompleted)
+                {
+                    downloadTask = this.FillABufferFromSourceStreamAsync();
+                }
             }
 
             Logger.Debug(".......Read returns with result: {0}", writtenByteCount);
