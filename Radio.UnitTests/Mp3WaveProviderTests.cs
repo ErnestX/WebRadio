@@ -35,6 +35,12 @@ namespace Radio.UnitTests
         }
 
         [Test]
+        public void Read_OneBufferFitsAll_OutputCorrectly()
+        {
+            ReadTestHelper(VALID_MP3_STREAM_1, 800000, 512);
+        }
+
+        [Test]
         public void Read_BufferSizeLargerThanReadIncrement_OutputCorrectly()
         {
             ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); 

@@ -29,11 +29,11 @@ namespace Radio
 
         void StreamAudioFromUrl(Uri streamUrl)
         {
-            waveProvider = new Mp3WaveProvider(streamUrl, 20480);
+            waveProvider = new Mp3WaveProvider(streamUrl, 2048000);
             Console.WriteLine("Mp3WaveProvider Initialized");
             WaveOut wo = new WaveOut();
-            //wo.DesiredLatency = 500;
-            //wo.NumberOfBuffers = 3;
+            //wo.DesiredLatency = 200;
+            //wo.NumberOfBuffers = 2;
             wo.Init(waveProvider);
             wo.Play(); // TODO: Call dispose()
             Console.WriteLine("audio playing");
@@ -52,6 +52,7 @@ namespace Radio
                     // test NAudio
                     Console.WriteLine("start audio test");
                     Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
+                    //Uri testUrl = new Uri("http://www.hochmuth.com/mp3/Tchaikovsky_Nocturne__orch.mp3");
                     StreamAudioFromUrl(testUrl);
 
                     //// testing: inspect the debug mp3 file
