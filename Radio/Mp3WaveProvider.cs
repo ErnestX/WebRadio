@@ -106,10 +106,8 @@ namespace Radio
             // start with two buffers to guarantee at least one filled buffer in reserve
             if (downloadTask == null || downloadTask.IsCompleted)
             {
-                downloadTask = this.FillABufferFromSourceStreamAsync();
-                downloadTask.Wait();
-                downloadTask = this.FillABufferFromSourceStreamAsync();
-                downloadTask.Wait();
+                this.FillABufferFromSourceStream();
+                this.FillABufferFromSourceStream();
             }
         }
 
@@ -117,10 +115,9 @@ namespace Radio
         {
             if (filledBuffers.Count < 1)
             {
+                this.FillABufferFromSourceStream();
                 if (downloadTask == null || downloadTask.IsCompleted)
                 {
-                    downloadTask = this.FillABufferFromSourceStreamAsync();
-                    downloadTask.Wait();
                     downloadTask = this.FillABufferFromSourceStreamAsync();
                 }
             }
@@ -197,10 +194,10 @@ namespace Radio
         }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
-        private async Task<bool> FillABufferFromSourceStreamAsync()
+        private bool FillABufferFromSourceStream()
         {
             byte[] buffer = buffersManager.CheckoutNewBuffer();
-            int unreadBytes = await StreamReader.ReadBytesFromStreamAsync(sourceStream, buffer, 0, buffer.Length);
+            int unreadBytes = StreamReader.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
             Debug.Assert(unreadBytes <= buffer.Length);
 
             if (unreadBytes == 0)
@@ -225,6 +222,12 @@ namespace Radio
                 // nothing is read
                 return false;
             }
+        }
+
+        /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
+        private async Task<bool> FillABufferFromSourceStreamAsync()
+        {
+            return await Task.Run(this.FillABufferFromSourceStream);
         }
 
         public void Dispose()
