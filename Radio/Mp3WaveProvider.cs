@@ -115,10 +115,6 @@ namespace Radio
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            int writtenByteCount = 0;
-            writeDataFromFilledBuffers(ref writtenByteCount);
-
-            // TODO: make sure the previous download have finished before calling new ones. maybe keep track of the status of task files. 
             if (filledBuffers.Count < 1)
             {
                 if (downloadTask == null || downloadTask.IsCompleted)
@@ -135,6 +131,9 @@ namespace Radio
                     downloadTask = this.FillABufferFromSourceStreamAsync();
                 }
             }
+
+            int writtenByteCount = 0;
+            writeDataFromFilledBuffers(ref writtenByteCount);
 
             Logger.Debug(".......Read returns with result: {0}", writtenByteCount);
             return writtenByteCount;

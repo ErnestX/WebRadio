@@ -25,16 +25,12 @@ namespace Radio
             this.radioViewModel = new RadioViewModel();
             radioViewModel.PropertyChanged += OnStateChanged; 
             this.DataContext = radioViewModel;
-
-            // test NAudio
-            Console.WriteLine("start audio test");
-            Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
-            StreamAudioFromUrl(testUrl);
         }
 
         void StreamAudioFromUrl(Uri streamUrl)
         {
             waveProvider = new Mp3WaveProvider(streamUrl, 20480);
+            Console.WriteLine("Mp3WaveProvider Initialized");
             WaveOut wo = new WaveOut();
             //wo.DesiredLatency = 500;
             //wo.NumberOfBuffers = 3;
@@ -52,6 +48,11 @@ namespace Radio
                 if (this.radioViewModel.IsConnected)
                 {
                     playButton.Content = "connected!";
+
+                    // test NAudio
+                    Console.WriteLine("start audio test");
+                    Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
+                    StreamAudioFromUrl(testUrl);
 
                     //// testing: inspect the debug mp3 file
                     //waveProvider.Dispose();
