@@ -22,7 +22,7 @@ namespace Radio
         //private Stream bufferedStream;
         //private int streamReadPosition;
 
-        private BuffersManager buffersManager;
+        private BufferReuseManager buffersManager;
         private int beingReadBufferUnreadIndexBookmark;
         private bool requestNextBuffer;
         private byte[] beingReadBuffer;
@@ -97,7 +97,7 @@ namespace Radio
 
         private void InitializeBuffers()
         {
-            buffersManager = new BuffersManager(DefaultBufferSize, INITIAL_BUFFER_NUM);
+            buffersManager = new BufferReuseManager(DefaultBufferSize, INITIAL_BUFFER_NUM);
             filledBuffers = new Queue<byte[]>();
         }
 
@@ -197,7 +197,7 @@ namespace Radio
         private bool FillABufferFromSourceStream()
         {
             byte[] buffer = buffersManager.CheckoutNewBuffer();
-            int unreadBytes = StreamReader.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
+            int unreadBytes = Mp3DecodingStream.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
             Debug.Assert(unreadBytes <= buffer.Length);
 
             if (unreadBytes == 0)

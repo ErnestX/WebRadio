@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Radio.UnitTests
 {
-    class BuffersManagerTests
+    class BufferReuseManagerTests
     {
         [SetUp]
         public void Setup()
@@ -17,16 +17,16 @@ namespace Radio.UnitTests
         [Test]
         public void Initialization_InvalidInput_ThrowArgumentException()
         {
-            Assert.That(() => new BuffersManager(128, 0), 
+            Assert.That(() => new BufferReuseManager(128, 0), 
                 Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Buffer size and buffer number cannot be zero or negative"));
 
-            Assert.That(() => new BuffersManager(128, -10), 
+            Assert.That(() => new BufferReuseManager(128, -10), 
                 Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Buffer size and buffer number cannot be zero or negative"));
 
-            Assert.That(() => new BuffersManager(0, 0), 
+            Assert.That(() => new BufferReuseManager(0, 0), 
                 Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Buffer size and buffer number cannot be zero or negative"));
 
-            Assert.That(() => new BuffersManager(-128, 0), 
+            Assert.That(() => new BufferReuseManager(-128, 0), 
                 Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Buffer size and buffer number cannot be zero or negative"));
         }
 
@@ -35,7 +35,7 @@ namespace Radio.UnitTests
         {
             const int BUFFER_SIZE = 128;
             List<byte[]> bfs = new List<byte[]>(0);
-            BuffersManager bfm = new BuffersManager(BUFFER_SIZE, 5);
+            BufferReuseManager bfm = new BufferReuseManager(BUFFER_SIZE, 5);
 
             for (int i = 0; i < 5; i++)
             {
@@ -64,7 +64,7 @@ namespace Radio.UnitTests
         {
             const int BUFFER_SIZE = 128;
             List<byte[]> bfs = new List<byte[]>(0);
-            BuffersManager bfm = new BuffersManager(BUFFER_SIZE, 3);
+            BufferReuseManager bfm = new BufferReuseManager(BUFFER_SIZE, 3);
 
             for (int i = 0; i < 5; i++)
             {
@@ -90,7 +90,7 @@ namespace Radio.UnitTests
             const int BUFFER_SIZE = 128;
             List<byte[]> bfs = new List<byte[]>(0);
 
-            BuffersManager bfm = new BuffersManager(BUFFER_SIZE, 5);
+            BufferReuseManager bfm = new BufferReuseManager(BUFFER_SIZE, 5);
             Assert.AreEqual(5, bfm.NumOfBuffers);
             Assert.AreEqual(5, bfm.NumOfAvailableBuffers);
 

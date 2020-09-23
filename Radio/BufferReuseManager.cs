@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class BuffersManager
+    class BufferReuseManager
     {
         public int BufferSize { get; }
         public int NumOfBuffers
@@ -31,7 +31,7 @@ namespace Radio
         private List<byte[]> allBuffers;
         private List<int> availableBufferIndexes;
 
-        public BuffersManager(int bufferSize, int numOfBuffers)
+        public BufferReuseManager(int bufferSize, int numOfBuffers)
         {
             if (bufferSize < 1 || numOfBuffers < 1)
             {

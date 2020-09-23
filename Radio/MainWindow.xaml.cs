@@ -29,12 +29,16 @@ namespace Radio
 
         void StreamAudioFromUrl(Uri streamUrl)
         {
-            waveProvider = new Mp3WaveProvider(streamUrl, 2048000);
+            waveProvider = new Mp3WaveProvider(streamUrl, 1000000); // use a huge buffer for testing to eliminate download interruptions as a factor
             Console.WriteLine("Mp3WaveProvider Initialized");
+            var reader = new Mp3FileReader(@"C:\Users\Jialiang\Desktop\radioDebug.mp3");
+
+
             WaveOut wo = new WaveOut();
             //wo.DesiredLatency = 200;
             //wo.NumberOfBuffers = 2;
             wo.Init(waveProvider);
+            //wo.Init(reader);
             wo.Play(); // TODO: Call dispose()
             Console.WriteLine("audio playing");
         }
