@@ -15,9 +15,12 @@ namespace Radio
     class Mp3WaveProvider : IWaveProvider, IDisposable
     {
 
-        //private HttpWebResponse response;
+        private HttpWebResponse response;
+        private Stream sourceStream;
+        private bool requestNextBuffer;
         private int beingReadBufferUnreadIndexBookmark;
         private byte[] beingReadBuffer;
+        private Bufferer bufferer;
 
 #if DEBUG
         private Stream debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
@@ -29,40 +32,8 @@ namespace Radio
 
         public Mp3WaveProvider(Uri mp3Url, int bufferSize)
         {
-            HttpWebRequest req;
-            HttpWebResponse tempRes = null;
-
-            try // init WaveFormat from a fragment of the mp3 file
-            {
-                req = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
-                tempRes = (HttpWebResponse)req.GetResponse();
-                Stream tempStream = tempRes.GetResponseStream();
-
-                byte[] bfr = new byte[BYTE_NEEDED_FOR_INIT];
-                int bytesRead = tempStream.Read(bfr, 0, bfr.Length);
-                Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(bfr));
-                WaveFormat = mp3FileReader.WaveFormat;
-                Url = mp3Url;
-
-                Console.WriteLine("Printing WaveFormat Object: ");
-                Console.WriteLine(WaveFormat.ToString());
-                //Console.WriteLine("bite rate: {0}", WaveFormat.AverageBytesPerSecond);
-            }
-            catch (Exception ex)
-            {
-                // TODO: display message in UI
-                Console.WriteLine("failed to read url: ");
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (tempRes != null)
-                {
-                    tempRes.Close();
-                }
-            }
-
             this.InitializeStream();
+            requestNextBuffer = true;
             beingReadBufferUnreadIndexBookmark = 0;
         }
 
@@ -77,22 +48,6 @@ namespace Radio
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            if (filledBuffers.Count < 1)
-            {
-                this.FillABufferFromSourceStream();
-                if (downloadTask == null || downloadTask.IsCompleted)
-                {
-                    downloadTask = this.FillABufferFromSourceStreamAsync();
-                }
-            }
-            else if (filledBuffers.Count < 2)
-            {
-                if (downloadTask == null || downloadTask.IsCompleted)
-                {
-                    downloadTask = this.FillABufferFromSourceStreamAsync();
-                }
-            }
-
             int writtenByteCount = 0;
             writeDataFromFilledBuffers(ref writtenByteCount);
 
@@ -103,11 +58,13 @@ namespace Radio
             {
                 if (requestNextBuffer)
                 {
-                    if (filledBuffers.Count <= 0)
+                    //if (filledBuffers.Count <= 0)
+                    if (bufferer.EndOfStream)
                     {
                         return;
                     }
-                    beingReadBuffer = filledBuffers.Dequeue();
+                    //beingReadBuffer = filledBuffers.Dequeue();
+                    beingReadBuffer = bufferer.GetNextBuffer();
                 }
 
                 Debug.Assert(beingReadBuffer != null);
@@ -130,10 +87,7 @@ namespace Radio
                     wbc += bytesToWrite;
                     beingReadBufferUnreadIndexBookmark = 0;
 
-                    if (buffersManager.BelongToTheManager(beingReadBuffer))
-                    {
-                        buffersManager.RecycleUsedBuffer(beingReadBuffer);
-                    }
+                    bufferer.TryRecycleBuffer(beingReadBuffer);
 
                     writeDataFromFilledBuffers(ref wbc); // continue the recursion
                 }

@@ -14,6 +14,12 @@ namespace Radio
     class Mp3DecodingStream : Stream
     {
         const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
+
+        private Stream sourceStream;
+        private Mp3Decoder mp3Decoder;
+        private byte[] initBuffer;
+        private int initBufferUnreadIndexBookmark;
+
         public WaveFormat WaveFormat { get; }
         public override bool CanRead => true;
 
@@ -21,14 +27,9 @@ namespace Radio
 
         public override bool CanWrite => false;
 
-        public override long Length => throw new NotImplementedException();
+        public override long Length => throw new NotSupportedException();
 
-        public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        private Stream sourceStream;
-        private Mp3Decoder mp3Decoder;
-        private byte[] initBuffer;
-        private int initBufferUnreadIndexBookmark;
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
         public Mp3DecodingStream(Stream s, Mp3Decoder md)
         {
@@ -65,17 +66,17 @@ namespace Radio
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override void SetLength(long value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

@@ -18,8 +18,11 @@ namespace Radio
         private BufferReuseManager buffersManager;
         private Queue<byte[]> filledBuffers;
         private Task<bool> downloadTask;
-        private bool requestNextBuffer;
+        
         public int DefaultBufferSize { get; }
+
+        // return false if no filled buffer left because end of stream is reached, else true
+        public bool EndOfStream { get; } 
 
         private Stream sourceStream;
 
@@ -36,7 +39,6 @@ namespace Radio
             this.InitializeBuffers();
             this.StartBuffering();
 
-            requestNextBuffer = true;
             downloadTask = null;
         }
 
@@ -58,12 +60,31 @@ namespace Radio
 
         public byte[] GetNextBuffer()
         {
+            if (filledBuffers.Count < 1)
+            {
+                this.FillABufferFromSourceStream();
+                if (downloadTask == null || downloadTask.IsCompleted)
+                {
+                    downloadTask = this.FillABufferFromSourceStreamAsync();
+                }
+            }
+            else if (filledBuffers.Count < 2)
+            {
+                if (downloadTask == null || downloadTask.IsCompleted)
+                {
+                    downloadTask = this.FillABufferFromSourceStreamAsync();
+                }
+            }
 
+            return filledBuffers.Dequeue();
         }
 
-        public void TryRecycleBuffer()
+        public void TryRecycleBuffer(byte[] bf)
         {
-
+            if (buffersManager.BelongToTheManager(bf))
+            {
+                buffersManager.RecycleUsedBuffer(bf);
+            }
         }
 
 
