@@ -15,8 +15,10 @@ namespace Radio
     class Mp3WaveProvider : IWaveProvider, IDisposable
     {
 
-        private HttpWebResponse response;
-        
+        //private HttpWebResponse response;
+        private int beingReadBufferUnreadIndexBookmark;
+        private byte[] beingReadBuffer;
+
 #if DEBUG
         private Stream debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
 #endif
@@ -61,7 +63,8 @@ namespace Radio
             }
 
             this.InitializeStream();
-    }
+            beingReadBufferUnreadIndexBookmark = 0;
+        }
 
         private void InitializeStream()
         {

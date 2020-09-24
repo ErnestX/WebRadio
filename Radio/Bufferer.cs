@@ -16,11 +16,9 @@ namespace Radio
         const int INITIAL_BUFFER_NUM = 4;
 
         private BufferReuseManager buffersManager;
-        private int beingReadBufferUnreadIndexBookmark;
-        private bool requestNextBuffer;
-        private byte[] beingReadBuffer;
         private Queue<byte[]> filledBuffers;
         private Task<bool> downloadTask;
+        private bool requestNextBuffer;
         public int DefaultBufferSize { get; }
 
         private Stream sourceStream;
@@ -36,10 +34,8 @@ namespace Radio
 
             DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
-
             this.StartBuffering();
 
-            beingReadBufferUnreadIndexBookmark = 0;
             requestNextBuffer = true;
             downloadTask = null;
         }
@@ -59,6 +55,17 @@ namespace Radio
                 this.FillABufferFromSourceStream();
             }
         }
+
+        public byte[] GetNextBuffer()
+        {
+
+        }
+
+        public void TryRecycleBuffer()
+        {
+
+        }
+
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
         private bool FillABufferFromSourceStream()
