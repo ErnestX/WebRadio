@@ -14,32 +14,16 @@ namespace Radio
 {
     class Mp3WaveProvider : IWaveProvider, IDisposable
     {
-        const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
-        const int INITIAL_BUFFER_NUM = 4;
 
         private HttpWebResponse response;
-        private Stream sourceStream;
-        //private Stream bufferedStream;
-        //private int streamReadPosition;
-
-        private BufferReuseManager buffersManager;
-        private int beingReadBufferUnreadIndexBookmark;
-        private bool requestNextBuffer;
-        private byte[] beingReadBuffer;
-        private Queue<byte[]> filledBuffers;
-        private Task<bool> downloadTask;
+        
 #if DEBUG
         private Stream debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
 #endif
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
 
-        //public int SpeedCalcUnitSize { get; }
-        //private int NumOfUnitPerBuffer { get; }
-        public int DefaultBufferSize {get;}
-
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Mp3WaveProviderDebug");
-
 
         public Mp3WaveProvider(Uri mp3Url, int bufferSize)
         {
@@ -77,15 +61,6 @@ namespace Radio
             }
 
             this.InitializeStream();
-
-            DefaultBufferSize = bufferSize;
-            this.InitializeBuffers();
-
-            this.StartBuffering();
-
-            beingReadBufferUnreadIndexBookmark = 0;
-            requestNextBuffer = true;
-            downloadTask = null;
     }
 
         private void InitializeStream()
@@ -95,21 +70,7 @@ namespace Radio
             sourceStream = response.GetResponseStream();
         }
 
-        private void InitializeBuffers()
-        {
-            buffersManager = new BufferReuseManager(DefaultBufferSize, INITIAL_BUFFER_NUM);
-            filledBuffers = new Queue<byte[]>();
-        }
 
-        private void StartBuffering()
-        {
-            // start with two buffers to guarantee at least one filled buffer in reserve
-            if (downloadTask == null || downloadTask.IsCompleted)
-            {
-                this.FillABufferFromSourceStream();
-                this.FillABufferFromSourceStream();
-            }
-        }
 
         public int Read(byte[] buffer, int offset, int count)
         {
@@ -193,42 +154,6 @@ namespace Radio
             }
         }
 
-        /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
-        private bool FillABufferFromSourceStream()
-        {
-            byte[] buffer = buffersManager.CheckoutNewBuffer();
-            int unreadBytes = Mp3DecodingStream.ReadBytesFromStream(sourceStream, buffer, 0, buffer.Length);
-            Debug.Assert(unreadBytes <= buffer.Length);
-
-            if (unreadBytes == 0)
-            {
-                // buffer is full
-                filledBuffers.Enqueue(buffer);
-                Logger.Debug(">>>>>>>Downloaded a buffer; filledBuffers count: {0}", filledBuffers.Count);
-                return true;
-            }
-            else if (unreadBytes < buffer.Length)
-            {
-                // buffer is not completely filled. remove invalid data
-                byte[] croppedBf = new byte[buffer.Length - unreadBytes];
-                Array.Copy(buffer, croppedBf, croppedBf.Length);
-                buffersManager.RecycleUsedBuffer(buffer);
-                filledBuffers.Enqueue(croppedBf);
-                Logger.Debug(">>>>>>>Downloaded a buffer; filledBuffers count: {0}", filledBuffers.Count);
-                return true;
-            }
-            else
-            {
-                // nothing is read
-                return false;
-            }
-        }
-
-        /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
-        private async Task<bool> FillABufferFromSourceStreamAsync()
-        {
-            return await Task.Run(this.FillABufferFromSourceStream);
-        }
 
         public void Dispose()
         {

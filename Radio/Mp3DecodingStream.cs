@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,51 +8,49 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
+    /// <summary>
+    /// adds a layer to a mp3 stream to decode it to wave data as it comes in
+    /// </summary>
     class Mp3DecodingStream : Stream
     {
-        public override bool CanRead => throw new NotImplementedException();
+        const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
+        public WaveFormat WaveFormat { get; }
+        public override bool CanRead => true;
 
-        public override bool CanSeek => throw new NotImplementedException();
+        public override bool CanSeek => false;
 
-        public override bool CanWrite => throw new NotImplementedException();
+        public override bool CanWrite => false;
 
         public override long Length => throw new NotImplementedException();
 
         public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        /// <summary>read specified bytes from stream</summary>
-        /// <returns>number of bytes failed to read because the end of stream is reached; 0 if all bytes are read successfully</returns>
-        static public int ReadBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
+        private Stream sourceStream;
+        private Mp3Decoder mp3Decoder;
+        private byte[] initBuffer;
+        private int initBufferUnreadIndexBookmark;
+
+        public Mp3DecodingStream(Stream s, Mp3Decoder md)
         {
-            int bytesRead;
-            int totalBytesRead = 0;
-
-            int timesReadZeroByte = 0;
-            const int TIMES_READ_ZERO_BYTE_BEFORE_ABORT = 3;
-
-            int bytesYetToRead = bytesToRead;
-            int readOffset = offset;
-            while (bytesYetToRead > 0)
+            if (!s.CanRead)
             {
-                bytesRead = stream.Read(buffer, readOffset, bytesYetToRead);
-                totalBytesRead += bytesRead;
-
-                if (bytesRead == 0)
-                {
-                    timesReadZeroByte++;
-                }
-
-                if (timesReadZeroByte >= TIMES_READ_ZERO_BYTE_BEFORE_ABORT)
-                {
-                    return bytesYetToRead;
-                }
-
-                readOffset += bytesRead;
-                bytesYetToRead = bytesToRead - totalBytesRead;
-                Debug.Assert(bytesYetToRead >= 0);
+                throw new ArgumentException("source stream is not readable");
             }
 
-            return 0;
+            sourceStream = s;
+            mp3Decoder = md;
+
+            // read enough data to retrieve the wave format
+            initBuffer = new byte[BYTE_NEEDED_FOR_INIT];
+            int unreadBytes = StreamReader.ReadBytesFromStream(sourceStream, initBuffer, 0, initBuffer.Length);
+            if (unreadBytes > 0)
+            {
+                Array.Resize(ref initBuffer, initBuffer.Length - unreadBytes);
+            }
+            Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(initBuffer));
+            WaveFormat = mp3FileReader.WaveFormat;
+
+            initBufferUnreadIndexBookmark = 0;
         }
 
         public override void Flush()
@@ -70,12 +68,12 @@ namespace Radio
             throw new NotImplementedException();
         }
 
-        public override void SetLength(long value)
+        public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();
         }
 
-        public override void Write(byte[] buffer, int offset, int count)
+        public override void SetLength(long value)
         {
             throw new NotImplementedException();
         }

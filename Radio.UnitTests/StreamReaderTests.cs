@@ -23,14 +23,10 @@ namespace Radio.UnitTests
             byte[] bf = new byte[1000];
             using (var testStream = new MemoryStream(randomBytes))
             {
-                int bytesUnread = Mp3DecodingStream.ReadBytesFromStream(testStream, bf, 0, 500);
-                //task.Wait();
-                //int bytesUnread = task.Result;
+                int bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 0, 500);
                 Assert.AreEqual(0, bytesUnread);
 
-                bytesUnread = Mp3DecodingStream.ReadBytesFromStream(testStream, bf, 500, 500);
-                //task.Wait();
-                //bytesUnread = task.Result;
+                bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 500, 500);
                 Assert.AreEqual(0, bytesUnread);
             }
             Assert.IsTrue(bf.SequenceEqual(randomBytes));
@@ -46,14 +42,10 @@ namespace Radio.UnitTests
             byte[] bf = new byte[1000];
             using (var testStream = new MemoryStream(randomBytes))
             {
-                int bytesUnread = Mp3DecodingStream.ReadBytesFromStream(testStream, bf, 0, 500);
-                //task.Wait();
-                //int bytesUnread = task.Result;
+                int bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 0, 500);
                 Assert.AreEqual(0, bytesUnread);
 
-                bytesUnread = Mp3DecodingStream.ReadBytesFromStream(testStream, bf, 500, 500);
-                //task.Wait();
-                //bytesUnread = task.Result;
+                bytesUnread = StreamReader.ReadBytesFromStream(testStream, bf, 500, 500);
                 Assert.AreEqual(100, bytesUnread);
             }
             Array.Resize(ref bf, 900);
