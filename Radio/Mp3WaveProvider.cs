@@ -22,9 +22,9 @@ namespace Radio
         private int beingReadBufferUnreadIndexBookmark;
         private byte[] beingReadBuffer;
         private Bufferer bufferer;
-
 #if DEBUG
-        private Stream debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); // for writting down the downloaded stream for debugging. 
+        private bool LOG_STREAM_TO_FILE = false; // switch off to avoid conflict when running tests in parallel
+        private Stream debugFileStream;
 #endif
         public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
@@ -71,6 +71,13 @@ namespace Radio
             bufferer = new Bufferer(sourceStream, bufferSize);
             requestNextBuffer = true;
             beingReadBufferUnreadIndexBookmark = 0;
+
+#if DEBUG
+            if (LOG_STREAM_TO_FILE)
+            {
+                debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); 
+            }
+#endif
         }
 
         private void InitializeStream()
@@ -122,7 +129,10 @@ namespace Radio
 
                     Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
 #if DEBUG
-                    debugFileStream.Write(beingReadBuffer, beingReadBufferUnreadIndexBookmark, bytesToWrite);
+                    if (LOG_STREAM_TO_FILE)
+                    {
+                        debugFileStream.Write(beingReadBuffer, beingReadBufferUnreadIndexBookmark, bytesToWrite);
+                    }
 #endif
                     wbc += bytesToWrite;
                     beingReadBufferUnreadIndexBookmark = 0;
@@ -142,7 +152,10 @@ namespace Radio
 
                     Array.Copy(beingReadBuffer, beingReadBufferUnreadIndexBookmark, buffer, offset + wbc, bytesToWrite);
 #if DEBUG
-                    debugFileStream.Write(beingReadBuffer, beingReadBufferUnreadIndexBookmark, bytesToWrite);
+                    if (LOG_STREAM_TO_FILE)
+                    {
+                        debugFileStream.Write(beingReadBuffer, beingReadBufferUnreadIndexBookmark, bytesToWrite);
+                    }
 #endif
                     wbc += bytesToWrite;
                     beingReadBufferUnreadIndexBookmark += bytesToWrite;
