@@ -14,6 +14,7 @@ namespace Radio
 {
     class Mp3WaveProvider : IWaveProvider, IDisposable
     {
+        const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
 
         private HttpWebResponse response;
         private Stream sourceStream;
@@ -32,7 +33,42 @@ namespace Radio
 
         public Mp3WaveProvider(Uri mp3Url, int bufferSize)
         {
+            HttpWebRequest req;
+            HttpWebResponse tempRes = null;
+
+            try // init WaveFormat from a fragment of the mp3 file
+            {
+                req = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
+                tempRes = (HttpWebResponse)req.GetResponse();
+                Stream tempStream = tempRes.GetResponseStream();
+
+                byte[] bfr = new byte[BYTE_NEEDED_FOR_INIT];
+                int bytesRead = tempStream.Read(bfr, 0, bfr.Length);
+                Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(bfr));
+                WaveFormat = mp3FileReader.WaveFormat;
+                Url = mp3Url;
+
+                Console.WriteLine("Printing WaveFormat Object: ");
+                Console.WriteLine(WaveFormat.ToString());
+                //Console.WriteLine("bite rate: {0}", WaveFormat.AverageBytesPerSecond);
+            }
+            catch (Exception ex)
+            {
+                // TODO: display message in UI
+                Console.WriteLine("failed to read url: ");
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (tempRes != null)
+                {
+                    tempRes.Close();
+                }
+            }
+
             this.InitializeStream();
+
+            bufferer = new Bufferer(sourceStream, bufferSize);
             requestNextBuffer = true;
             beingReadBufferUnreadIndexBookmark = 0;
         }
@@ -59,12 +95,16 @@ namespace Radio
                 if (requestNextBuffer)
                 {
                     //if (filledBuffers.Count <= 0)
-                    if (bufferer.EndOfStream)
+                    //if (bufferer.EndOfStream)
+                    //{
+                    //    return;
+                    //}
+                    //beingReadBuffer = filledBuffers.Dequeue();
+                    beingReadBuffer = bufferer.GetNextBuffer();
+                    if (beingReadBuffer == null)
                     {
                         return;
                     }
-                    //beingReadBuffer = filledBuffers.Dequeue();
-                    beingReadBuffer = bufferer.GetNextBuffer();
                 }
 
                 Debug.Assert(beingReadBuffer != null);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class Mp3Decoder : Decoder
+    class Mp3Decoder
     {
     }
 }

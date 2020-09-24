@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Radio
@@ -21,8 +22,9 @@ namespace Radio
         
         public int DefaultBufferSize { get; }
 
-        // return false if no filled buffer left because end of stream is reached, else true
-        public bool EndOfStream { get; } 
+        // return false if end of stream is reached and no filledBuffer is left, else true
+        public bool EndOfStream { get; private set; }
+        private bool endOfStreamReachedAndBuffered;
 
         private Stream sourceStream;
 
@@ -35,10 +37,11 @@ namespace Radio
                 throw new ArgumentException("source stream is not readable");
             }
 
+            sourceStream = stream;
             DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
+            //EndOfStream = false;
             this.StartBuffering();
-
             downloadTask = null;
         }
 
@@ -55,6 +58,13 @@ namespace Radio
             {
                 this.FillABufferFromSourceStream();
                 this.FillABufferFromSourceStream();
+                this.TryFillABuffer();
+                //while (!downloadTask.IsCompleted)
+                //{
+                //    Thread.Sleep(5);
+                //}
+                //downloadTask.Wait();
+                this.TryFillABuffer();
             }
         }
 
@@ -62,21 +72,34 @@ namespace Radio
         {
             if (filledBuffers.Count < 1)
             {
-                this.FillABufferFromSourceStream();
-                if (downloadTask == null || downloadTask.IsCompleted)
-                {
-                    downloadTask = this.FillABufferFromSourceStreamAsync();
-                }
+                this.FillABufferFromSourceStream(); // TODO: implement EndOfStream properly with continueWith; try removing all sync calls
+
+                //this.TryFillABuffer();
+
+                //while (!downloadTask.IsCompleted)
+                //{
+                //    Thread.Sleep(5);
+                //}
+                //downloadTask.Wait();
+
+                this.TryFillABuffer();
             }
             else if (filledBuffers.Count < 2)
             {
-                if (downloadTask == null || downloadTask.IsCompleted)
-                {
-                    downloadTask = this.FillABufferFromSourceStreamAsync();
-                }
+                this.TryFillABuffer();
             }
 
-            return filledBuffers.Dequeue();
+            //if (EndOfStream)
+            if (filledBuffers.Count < 1)
+            {
+                return null;
+            }
+            else
+            {
+                return filledBuffers.Dequeue();
+            }
+
+            //return EndOfStream? null : filledBuffers.Dequeue();
         }
 
         public void TryRecycleBuffer(byte[] bf)
@@ -87,6 +110,20 @@ namespace Radio
             }
         }
 
+        private void TryFillABuffer()
+        {
+            if (downloadTask == null || downloadTask.IsCompleted)
+            {
+                downloadTask = this.FillABufferFromSourceStreamAsync();
+                //EndOfStream = !await downloadTask;
+            }
+        }
+
+        /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
+        private async Task<bool> FillABufferFromSourceStreamAsync()
+        {
+            return await Task.Run(this.FillABufferFromSourceStream);
+        }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
         private bool FillABufferFromSourceStream()
@@ -117,12 +154,6 @@ namespace Radio
                 // nothing is read
                 return false;
             }
-        }
-
-        /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
-        private async Task<bool> FillABufferFromSourceStreamAsync()
-        {
-            return await Task.Run(this.FillABufferFromSourceStream);
         }
     }
 }
