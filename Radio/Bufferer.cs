@@ -40,7 +40,6 @@ namespace Radio
             sourceStream = stream;
             DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
-            //EndOfStream = false;
             this.StartBuffering();
             downloadTask = null;
         }
@@ -58,13 +57,6 @@ namespace Radio
             {
                 this.FillABufferFromSourceStream();
                 this.FillABufferFromSourceStream();
-                this.TryFillABuffer();
-                //while (!downloadTask.IsCompleted)
-                //{
-                //    Thread.Sleep(5);
-                //}
-                //downloadTask.Wait();
-                this.TryFillABuffer();
             }
         }
 
@@ -72,16 +64,7 @@ namespace Radio
         {
             if (filledBuffers.Count < 1)
             {
-                this.FillABufferFromSourceStream(); // TODO: implement EndOfStream properly with continueWith; try removing all sync calls
-
-                //this.TryFillABuffer();
-
-                //while (!downloadTask.IsCompleted)
-                //{
-                //    Thread.Sleep(5);
-                //}
-                //downloadTask.Wait();
-
+                Task.Run(async () => { this.TryFillABuffer(); }).Wait();
                 this.TryFillABuffer();
             }
             else if (filledBuffers.Count < 2)
@@ -89,17 +72,7 @@ namespace Radio
                 this.TryFillABuffer();
             }
 
-            //if (EndOfStream)
-            if (filledBuffers.Count < 1)
-            {
-                return null;
-            }
-            else
-            {
-                return filledBuffers.Dequeue();
-            }
-
-            //return EndOfStream? null : filledBuffers.Dequeue();
+            return filledBuffers.Count < 1 ? null : filledBuffers.Dequeue();
         }
 
         public void TryRecycleBuffer(byte[] bf)
@@ -115,7 +88,6 @@ namespace Radio
             if (downloadTask == null || downloadTask.IsCompleted)
             {
                 downloadTask = this.FillABufferFromSourceStreamAsync();
-                //EndOfStream = !await downloadTask;
             }
         }
 
