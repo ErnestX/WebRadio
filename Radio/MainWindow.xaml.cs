@@ -21,9 +21,11 @@ namespace Radio
         public MainWindow()
         {
             InitializeComponent();
+
             playButton.Content = "play";
+
             this.radioViewModel = new RadioViewModel();
-            radioViewModel.PropertyChanged += OnStateChanged; 
+            radioViewModel.PropertyChanged += OnStateChanged;
             this.DataContext = radioViewModel;
         }
 
@@ -31,7 +33,7 @@ namespace Radio
         {
             waveProvider = new Mp3WaveProvider(streamUrl, 1000000); // use a huge buffer for testing to eliminate download interruptions as a factor
             Console.WriteLine("Mp3WaveProvider Initialized");
-            var reader = new Mp3FileReader(@"C:\Users\Jialiang\Desktop\radioDebug.mp3");
+            //var reader = new Mp3FileReader(@"C:\Users\Jialiang\Desktop\radioDebug.mp3");
 
 
             WaveOut wo = new WaveOut();

@@ -11,7 +11,6 @@ using System.Web;
 [assembly: InternalsVisibleToAttribute("Radio.UnitTests")]
 namespace Radio
 {
-    // TODO singleton
     class RadioModel
     {
         protected Boolean IsConnected { private set; get; }
@@ -24,15 +23,14 @@ namespace Radio
 
         public RadioModel()
         {
-            //TODO
+            
         }
 
         public void ConnectToURL(Uri url)
         {
-            //TODO
             Logger.Info("connecting to URL: {0}", url);
 
-            Uri resUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
+            Uri resUrl = SoundCloudResourceFinder.FindAudioResBySCLink(url);
             this.CurrentResourceUri = resUrl;
             this.InvokeConnectedEvent(resUrl);
         }

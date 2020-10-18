@@ -10,11 +10,8 @@
 
     <Grid>
         <!-- instead of making use of the click event, the button is bound 
-        to an ICommand property which wraps around a function that does the job --> 
+        to an ICommand property which wraps around a function that does the job -->
         <Button Name="playButton"
                 Command="{Binding PlayCommand}"/>
-        <MediaElement Name="mediaElement"
-                      Visibility="Collapsed">
-        </MediaElement>
     </Grid>
 </Window>

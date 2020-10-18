@@ -15,9 +15,10 @@ namespace Radio
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
         public static Uri FindAudioResBySCLink(Uri url)
         {
-            
-
-            return null;
+            //TODO: stub
+            Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
+            //Uri testUrl = new Uri("http://www.hochmuth.com/mp3/Tchaikovsky_Nocturne__orch.mp3");
+            return testUrl;
         }
     }
 }

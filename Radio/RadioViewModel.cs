@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 namespace Radio
 {
     /* implement INotifyPropertyChanged in order to notify the view model 
-    whether the play command can be executed */
+    whether the play command can be executed */ 
     class RadioViewModel : INotifyPropertyChanged 
 
     {
@@ -15,7 +15,6 @@ namespace Radio
 
         public Uri Url { protected set; get; }
 
-        // required for INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Boolean IsConnected {
@@ -28,21 +27,15 @@ namespace Radio
                 return this.isConnected;
             }
         }
-
-        // ICommand implementations
         public ICommand PlayCommand { protected set; get; }
 
-        // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
-        //constructor
         public RadioViewModel()
         {
-            // alloc and init model
             radioModel = new RadioModel();
             radioModel.Connected += ConnectedEventHandler;
 
-            // set up commands
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
 
             // TODO stub
