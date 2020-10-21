@@ -13,10 +13,11 @@ namespace Radio
 {
     class RadioModel
     {
-        protected Boolean IsConnected { private set; get; }
-        protected Uri CurrentResourceUri { get; set; }
+        //public Boolean IsConnected { private set; get; }
+        public Uri CurrentResourceUri { get; private set; }
+        public Mp3DecodingStream stream { get; private set; }
 
-        public delegate void StateChangedHandler(object sender, EventArgs e);
+        public delegate void StateChangedHandler(object sender, ConnectedEventArgs e);
         public event StateChangedHandler Connected;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
@@ -32,14 +33,18 @@ namespace Radio
 
             Uri resUrl = SoundCloudResourceFinder.FindAudioResBySCLink(url);
             this.CurrentResourceUri = resUrl;
+            waveProvider = new Mp3WaveProvider(resUrl, 2048); 
+
             this.InvokeConnectedEvent(resUrl);
         }
 
         void InvokeConnectedEvent(Uri resourceUrl)
         {
-            //stub
+
             if (Connected != null)
-                Connected.Invoke(this, null);
+            {
+                Connected.Invoke(this, new ConnectedEventArgs());
+            }
         }
     }
 }

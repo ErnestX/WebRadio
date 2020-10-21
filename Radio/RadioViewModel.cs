@@ -58,7 +58,7 @@ namespace Radio
             }
         }
 
-        private void ConnectedEventHandler(object sender, EventArgs e)
+        private void ConnectedEventHandler(object sender, ConnectedEventArgs e)
         {
             Logger.Info("ViewModel: connected!");
             IsConnected = true;
