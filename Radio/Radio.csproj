@@ -87,6 +87,7 @@
     <Compile Include="Bufferer.cs" />
     <Compile Include="BufferReuseManager.cs" />
     <Compile Include="ConnectedEventArgs.cs" />
+    <Compile Include="MonitoredBufferedMp3Stream.cs" />
     <Compile Include="MonitoredStream.cs" />
     <Compile Include="Mp3Decoder.cs" />
     <Compile Include="Mp3DecodingStream.cs" />

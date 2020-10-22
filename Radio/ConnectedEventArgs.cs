@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,10 +10,10 @@ namespace Radio
 {
     class ConnectedEventArgs : EventArgs
     {
-        public MonitoredStream Stream { get; }
-        public ConnectedEventArgs(MonitoredStream s)
+        public IWaveProvider WaveProvider { get; }
+        public ConnectedEventArgs(IWaveProvider s)
         {
-            this.Stream = s;
+            this.WaveProvider = s;
         }
     }
 }

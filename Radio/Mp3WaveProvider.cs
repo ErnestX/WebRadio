@@ -101,12 +101,6 @@ namespace Radio
             {
                 if (requestNextBuffer)
                 {
-                    //if (filledBuffers.Count <= 0)
-                    //if (bufferer.EndOfStream)
-                    //{
-                    //    return;
-                    //}
-                    //beingReadBuffer = filledBuffers.Dequeue();
                     beingReadBuffer = bufferer.GetNextBuffer();
                     if (beingReadBuffer == null)
                     {

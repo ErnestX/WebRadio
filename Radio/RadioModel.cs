@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,9 +14,8 @@ namespace Radio
 {
     class RadioModel
     {
-        //public Boolean IsConnected { private set; get; }
         public Uri CurrentResourceUri { get; private set; }
-        public Mp3DecodingStream stream { get; private set; }
+        public IWaveProvider WaveProvider { get; private set; }
 
         public delegate void StateChangedHandler(object sender, ConnectedEventArgs e);
         public event StateChangedHandler Connected;
@@ -33,17 +33,16 @@ namespace Radio
 
             Uri resUrl = SoundCloudResourceFinder.FindAudioResBySCLink(url);
             this.CurrentResourceUri = resUrl;
-            waveProvider = new Mp3WaveProvider(resUrl, 2048); 
+            this.WaveProvider = new Mp3WaveProvider(resUrl, 2048); 
 
-            this.InvokeConnectedEvent(resUrl);
+            this.InvokeConnectedEvent();
         }
 
-        void InvokeConnectedEvent(Uri resourceUrl)
+        void InvokeConnectedEvent()
         {
-
             if (Connected != null)
             {
-                Connected.Invoke(this, new ConnectedEventArgs());
+                Connected.Invoke(this, new ConnectedEventArgs(this.WaveProvider));
             }
         }
     }

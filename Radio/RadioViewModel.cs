@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
+using NAudio.Wave;
 
 namespace Radio
 {
@@ -11,20 +12,21 @@ namespace Radio
 
     {
         private RadioModel radioModel;
-        private Boolean isConnected;
+        private Boolean isPlaying;
+        private IWaveProvider waveProvider;
 
         public Uri Url { protected set; get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Boolean IsConnected {
+        public Boolean IsPlaying {
             private set
             {
-                SetProperty(ref isConnected, value);
+                SetProperty(ref isPlaying, value);
             }
             get
             {
-                return this.isConnected;
+                return this.isPlaying;
             }
         }
         public ICommand PlayCommand { protected set; get; }
@@ -38,8 +40,8 @@ namespace Radio
 
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
 
-            // TODO stub
-            this.Url = new Uri("https://www.youtube.com/watch?v=9ORO3cnPu7k");
+            // TODO: stub. get this from view
+            this.Url = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
         }
 
         private void ExecutePlayCommand(object obj)
@@ -60,8 +62,15 @@ namespace Radio
 
         private void ConnectedEventHandler(object sender, ConnectedEventArgs e)
         {
+            waveProvider = e.WaveProvider;
+            WaveOutEvent wo = new WaveOutEvent();
+            //wo.DesiredLatency = 200;
+            //wo.NumberOfBuffers = 2;
+            wo.Init(waveProvider);
+            wo.Play(); // TODO: Call dispose()
+            Console.WriteLine("audio playing");
             Logger.Info("ViewModel: connected!");
-            IsConnected = true;
+            IsPlaying = true;
         }
 
         // If URL is valid, return sanitized URL; else, return null

@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    /// <summary>
-    /// adds a layer to a stream to monitor its reading activity
-    /// </summary>
-    class MonitoredStream : Stream
+    class MonitoredBufferedMp3Stream : Stream
     {
         public override bool CanRead => true;
 
