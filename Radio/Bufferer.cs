@@ -18,14 +18,12 @@ namespace Radio
 
         private BufferReuseManager buffersManager;
         private Queue<byte[]> filledBuffers;
-        private Task<bool> downloadTask;
         private static SemaphoreSlim readStreamSemaphore = new SemaphoreSlim(1, 1);
 
         public int DefaultBufferSize { get; }
 
         // return false if end of stream is reached and no filledBuffer is left, else true
         public bool EndOfStream { get; private set; }
-        private bool endOfStreamReachedAndBuffered;
 
         private Stream sourceStream;
 
@@ -42,7 +40,6 @@ namespace Radio
             DefaultBufferSize = bufferSize;
             this.InitializeBuffers();
             this.StartBuffering();
-            downloadTask = null;
     }
 
         private void InitializeBuffers()
@@ -54,23 +51,20 @@ namespace Radio
         private void StartBuffering()
         {
             // start with two buffers to guarantee at least one filled buffer in reserve
-            if (downloadTask == null || downloadTask.IsCompleted)
-            {
                 this.FillABufferFromSourceStream();
                 this.FillABufferFromSourceStream();
-            }
         }
 
         public byte[] GetNextBuffer()
         {
             if (filledBuffers.Count < 1)
             {
-                Task.Run(async () => { this.TryFillABuffer(); }).Wait();
-                this.TryFillABuffer();
+                Task.Run((Func<Task>)(async () => { this.FillABufferFromSourceStreamAsync(); })).Wait();
+                this.FillABufferFromSourceStreamAsync();
             }
             else if (filledBuffers.Count < 2)
             {
-                this.TryFillABuffer();
+                this.FillABufferFromSourceStreamAsync();
             }
 
             return filledBuffers.Count < 1 ? null : filledBuffers.Dequeue();
@@ -82,12 +76,6 @@ namespace Radio
             {
                 buffersManager.RecycleUsedBuffer(bf);
             }
-        }
-
-        private void TryFillABuffer()
-        {
-            downloadTask = this.FillABufferFromSourceStreamAsync();
-            Debug.Assert(downloadTask != null);
         }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
@@ -116,6 +104,7 @@ namespace Radio
             if (unreadBytes == 0)
             {
                 // buffer is full
+                Debug.Assert(buffer != null);
                 filledBuffers.Enqueue(buffer);
                 Logger.Debug(">>>>>>>Downloaded a buffer; filledBuffers count: {0}", filledBuffers.Count);
                 return true;
@@ -126,6 +115,7 @@ namespace Radio
                 byte[] croppedBf = new byte[buffer.Length - unreadBytes];
                 Array.Copy(buffer, croppedBf, croppedBf.Length);
                 buffersManager.RecycleUsedBuffer(buffer);
+                Debug.Assert(croppedBf != null);
                 filledBuffers.Enqueue(croppedBf);
                 Logger.Debug(">>>>>>>Downloaded a buffer; filledBuffers count: {0}", filledBuffers.Count);
                 return true;
