@@ -19,7 +19,8 @@ namespace Radio
         private BufferReuseManager buffersManager;
         private Queue<byte[]> filledBuffers;
         private Task<bool> downloadTask;
-        
+        private static SemaphoreSlim readStreamSemaphore = new SemaphoreSlim(1, 1);
+
         public int DefaultBufferSize { get; }
 
         // return false if end of stream is reached and no filledBuffer is left, else true
@@ -42,7 +43,7 @@ namespace Radio
             this.InitializeBuffers();
             this.StartBuffering();
             downloadTask = null;
-        }
+    }
 
         private void InitializeBuffers()
         {
@@ -85,16 +86,24 @@ namespace Radio
 
         private void TryFillABuffer()
         {
-            if (downloadTask == null || downloadTask.IsCompleted)
-            {
-                downloadTask = this.FillABufferFromSourceStreamAsync();
-            }
+            downloadTask = this.FillABufferFromSourceStreamAsync();
+            Debug.Assert(downloadTask != null);
         }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
         private async Task<bool> FillABufferFromSourceStreamAsync()
         {
-            return await Task.Run(this.FillABufferFromSourceStream);
+            await readStreamSemaphore.WaitAsync();
+            bool result;
+            try
+            {
+                result = await Task.Run(this.FillABufferFromSourceStream);
+            }
+            finally
+            {
+                readStreamSemaphore.Release();
+            }
+            return result;
         }
 
         /// <returns>false if the end of the stream has been reached and no data was read, ortherwise true</returns>
