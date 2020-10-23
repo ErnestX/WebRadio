@@ -113,7 +113,7 @@ namespace Radio
             }
             else if (unreadBytes < buffer.Length)
             {
-                // buffer is not completely filled. remove invalid data
+                // buffer is not completely filled, crop unused portion
                 byte[] croppedBf = new byte[buffer.Length - unreadBytes];
                 Array.Copy(buffer, croppedBf, croppedBf.Length);
                 buffersManager.RecycleUsedBuffer(buffer);

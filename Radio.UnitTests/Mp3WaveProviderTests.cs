@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace Radio.UnitTests
 {
+    [TestFixture,SingleThreaded] // prevent parallel read requests
     class Mp3WaveProviderTests
     {
         const string VALID_MP3_STREAM_1 = "https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"; //746kb, 27sec, 224kbps
