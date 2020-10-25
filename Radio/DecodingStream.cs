@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Radio
 {
     /// <summary>
-    /// adds a layer to a mp3 stream to decode it to wave data as it comes in
+    /// adds a layer to a audio stream to decode it to wave data as it comes in
     /// </summary>
-    class Mp3DecodingStream : Stream
+    class DecodingStream : Stream
     {
         const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
 
@@ -31,7 +31,7 @@ namespace Radio
 
         public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
-        public Mp3DecodingStream(Stream s, Mp3Decoder md)
+        public DecodingStream(Stream s, Mp3Decoder md)
         {
             if (!s.CanRead)
             {

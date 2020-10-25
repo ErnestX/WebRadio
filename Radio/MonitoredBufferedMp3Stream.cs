@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
+    /// <summary>
+    /// A factory class that warps a stream within a MonitoredStream within a DecodingStream within a BufferedStream
+    /// </summary>
     class MonitoredBufferedMp3Stream : Stream
     {
         public override bool CanRead => true;

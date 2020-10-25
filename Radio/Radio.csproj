@@ -90,7 +90,7 @@
     <Compile Include="MonitoredBufferedMp3Stream.cs" />
     <Compile Include="MonitoredStream.cs" />
     <Compile Include="Mp3Decoder.cs" />
-    <Compile Include="Mp3DecodingStream.cs" />
+    <Compile Include="DecodingStream.cs" />
     <Compile Include="Mp3WaveProvider.cs" />
     <Compile Include="SoundCloudResourceFinder.cs" />
     <Compile Include="DelegateCommand.cs" />

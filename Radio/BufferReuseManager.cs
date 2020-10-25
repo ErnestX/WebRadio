@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
+    /// <summary>
+    /// Manage a collection of buffers so that they can be reused and minimize alloc
+    /// </summary>
     class BufferReuseManager
     {
         public int BufferSize { get; }

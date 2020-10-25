@@ -10,8 +10,12 @@ namespace Radio
 {
     class StreamReader
     {
-        /// <summary>read specified bytes from stream</summary>
-        /// <returns>number of bytes failed to read because the end of stream is reached; 0 if all bytes are read successfully</returns>
+        /// <summary>
+        /// read specified bytes from stream
+        /// </summary>
+        /// <returns>
+        /// number of bytes failed to read because the end of stream is reached; 0 if all bytes are read successfully
+        /// </returns>
         static public int ReadBytesFromStream(Stream stream, byte[] buffer, int offset, int bytesToRead)
         {
             int bytesRead;
