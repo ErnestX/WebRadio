@@ -9,8 +9,9 @@ using NUnit.Framework;
 namespace Radio.UnitTests
 {
     [TestFixture,SingleThreaded] // prevent parallel read requests
-    class Mp3WaveProviderTests
+    class MyWaveProviderTests
     {
+        const string VALID_WAV_STREAM_1 = "https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav"; // 1MB
         const string VALID_MP3_STREAM_1 = "https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"; //746kb, 27sec, 224kbps
         const string VALID_MP3_STREAM_2 = "http://www.hochmuth.com/mp3/Tchaikovsky_Nocturne__orch.mp3"; // 794kb, 4min 30sec, 24kbps
 
@@ -19,45 +20,38 @@ namespace Radio.UnitTests
         {
         }
 
-        //[Test]
-        //public void CreateNewProviderFromUri_ValidAndSuccessful_CanRetrieveCorrectWaveFormat() { 
-      
-        //    MyWaveProvider provider = new MyWaveProvider(new Uri(VALID_MP3_STREAM_1), 20480);
-        //    Assert.AreEqual("16 bit PCM: 32kHz 2 channels", provider.WaveFormat.ToString());
-        //}
-
         [Test]
         public void Read_BufferSizeEqualToReadIncrement_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1024);
-            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 4096);
-            ReadTestHelper(VALID_MP3_STREAM_1, 4095, 4095);
-            ReadTestHelper(VALID_MP3_STREAM_1, 2083, 2083);
+            ReadTestHelper(VALID_WAV_STREAM_1, 1024, 1024);
+            ReadTestHelper(VALID_WAV_STREAM_1, 4096, 4096);
+            ReadTestHelper(VALID_WAV_STREAM_1, 4095, 4095);
+            ReadTestHelper(VALID_WAV_STREAM_1, 2083, 2083);
         }
 
         [Test]
         public void Read_OneBufferFitsAll_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 800000, 512);
+            ReadTestHelper(VALID_WAV_STREAM_1, 800000, 512);
         }
 
         [Test]
         public void Read_BufferSizeLargerThanReadIncrement_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 1025, 1024); 
-            ReadTestHelper(VALID_MP3_STREAM_1, 2047, 1024); 
-            ReadTestHelper(VALID_MP3_STREAM_1, 2048, 1024); 
-            ReadTestHelper(VALID_MP3_STREAM_1, 2049, 1024); 
-            ReadTestHelper(VALID_MP3_STREAM_1, 4096, 512);
+            ReadTestHelper(VALID_WAV_STREAM_1, 1025, 1024); 
+            ReadTestHelper(VALID_WAV_STREAM_1, 2047, 1024); 
+            ReadTestHelper(VALID_WAV_STREAM_1, 2048, 1024); 
+            ReadTestHelper(VALID_WAV_STREAM_1, 2049, 1024); 
+            ReadTestHelper(VALID_WAV_STREAM_1, 4096, 512);
         }
 
         [Test]
         public void Read_BufferSizeSmallerThanReadIncrement_OutputCorrectly()
         {
-            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 1025);
-            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 2048);
-            ReadTestHelper(VALID_MP3_STREAM_1, 1024, 2049);
-            ReadTestHelper(VALID_MP3_STREAM_1, 512, 4095);
+            ReadTestHelper(VALID_WAV_STREAM_1, 1024, 1025);
+            ReadTestHelper(VALID_WAV_STREAM_1, 1024, 2048);
+            ReadTestHelper(VALID_WAV_STREAM_1, 1024, 2049);
+            ReadTestHelper(VALID_WAV_STREAM_1, 512, 4095);
         }
 
         public void ReadTestHelper(string url, int bufferSize, int readIncrement)
@@ -72,7 +66,7 @@ namespace Radio.UnitTests
                 tempRes = (HttpWebResponse)req.GetResponse();
                 Stream tempStream = tempRes.GetResponseStream();
 
-                byte[] expectedBuffer = new byte[1024 * 800];
+                byte[] expectedBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
                 int expectedOffset = 0;
                 int bytesRead;
                 int zeroCounter = 0;
@@ -93,7 +87,7 @@ namespace Radio.UnitTests
 
 
                 mwp = new MyWaveProvider(new Uri(url), bufferSize);
-                byte[] testBuffer = new byte[1024 * 800];
+                byte[] testBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
                 int testOffset = 0;
                 zeroCounter = 0;
                 do
