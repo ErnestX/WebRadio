@@ -23,7 +23,7 @@ namespace Radio
         private byte[] beingReadBuffer;
         private Bufferer bufferer;
 #if DEBUG
-        private bool LOG_STREAM_TO_FILE = false; // switch off to avoid conflict when running tests in parallel
+        private bool LOG_STREAM_TO_FILE = true; // switch off to avoid conflict when running tests in parallel
         private Stream debugFileStream;
 #endif
         public Uri Url { get; }
@@ -75,7 +75,7 @@ namespace Radio
 #if DEBUG
             if (LOG_STREAM_TO_FILE)
             {
-                debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.mp3"); 
+                debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.wav"); 
             }
 #endif
         }
