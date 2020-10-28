@@ -14,12 +14,6 @@ namespace Radio
 {
     class MyWaveProvider : IWaveProvider, IDisposable
     {
-        const int WAV_HEADER_SIZE = 43; 
-        const int WAV_NUMCHANNELS_OFFSET = 22;
-        const int WAV_NUMCHANNELS_SIZE = 2;
-        const int WAV_SAMPLERATE_OFFSET = 24;
-        const int WAV_SAMPLERATE_SIZE = 4;
-
         private HttpWebResponse response;
         private Stream sourceStream;
         private bool doneReadingBeingReadBuffer;
@@ -37,7 +31,6 @@ namespace Radio
 
         public MyWaveProvider(Uri url, int bufferSize)
         {
-            // init stream
             this.Url = url;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url.ToString());
             response = (HttpWebResponse)req.GetResponse();
@@ -45,24 +38,13 @@ namespace Radio
 
             bufferer = new Bufferer(sourceStream, bufferSize);
 
-            // read header
             beingReadBuffer = bufferer.GetNextBuffer();
-            while(beingReadBuffer.Length < WAV_HEADER_SIZE)
+            while(beingReadBuffer.Length < WavReader.WavHeaderSize())
             {
                 beingReadBuffer = ConCatByteArr(beingReadBuffer, bufferer.GetNextBuffer());
             }
-
-            byte[] numOfChannelsBytes = new byte[WAV_NUMCHANNELS_SIZE];
-            Array.Copy(beingReadBuffer, WAV_NUMCHANNELS_OFFSET, numOfChannelsBytes, 0, WAV_NUMCHANNELS_SIZE);
-            int numOfChannels = BitConverter.ToInt16(numOfChannelsBytes, 0);
-            Logger.Debug("num of channels: {0}", numOfChannels);
-
-            byte[] sampleRateBytes = new byte[WAV_SAMPLERATE_SIZE];
-            Array.Copy(beingReadBuffer, WAV_SAMPLERATE_OFFSET, sampleRateBytes, 0, WAV_SAMPLERATE_SIZE);
-            int sampleRate = BitConverter.ToInt32(sampleRateBytes, 0);
-            Logger.Debug("sample rate: {0}", sampleRate);
-
-            this.WaveFormat = new WaveFormat(sampleRate, numOfChannels);
+            byte[] header = (byte[])beingReadBuffer.Clone();
+            this.WaveFormat = new WaveFormat(WavReader.GetSampleRateFromHeader(header), WavReader.GetNumChannelFromHeader(header));
 
             doneReadingBeingReadBuffer = false;
             beingReadBufferUnreadIndexBookmark = 0;
