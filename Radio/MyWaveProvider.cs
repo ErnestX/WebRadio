@@ -39,12 +39,12 @@ namespace Radio
             bufferer = new Bufferer(sourceStream, bufferSize);
 
             beingReadBuffer = bufferer.GetNextBuffer();
-            while(beingReadBuffer.Length < WavReader.WavHeaderSize())
+            while(beingReadBuffer.Length < MyWavReader.WavHeaderSize())
             {
                 beingReadBuffer = ConCatByteArr(beingReadBuffer, bufferer.GetNextBuffer());
             }
             byte[] header = (byte[])beingReadBuffer.Clone();
-            this.WaveFormat = new WaveFormat(WavReader.GetSampleRateFromHeader(header), WavReader.GetNumChannelFromHeader(header));
+            this.WaveFormat = new WaveFormat(MyWavReader.GetSampleRateFromHeader(header), MyWavReader.GetNumChannelFromHeader(header));
 
             doneReadingBeingReadBuffer = false;
             beingReadBufferUnreadIndexBookmark = 0;
