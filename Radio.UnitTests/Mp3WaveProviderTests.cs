@@ -19,12 +19,12 @@ namespace Radio.UnitTests
         {
         }
 
-        [Test]
-        public void CreateNewProviderFromUri_ValidAndSuccessful_CanRetrieveCorrectWaveFormat() { 
+        //[Test]
+        //public void CreateNewProviderFromUri_ValidAndSuccessful_CanRetrieveCorrectWaveFormat() { 
       
-            MyWaveProvider provider = new MyWaveProvider(new Uri(VALID_MP3_STREAM_1), 20480);
-            Assert.AreEqual("16 bit PCM: 32kHz 2 channels", provider.WaveFormat.ToString());
-        }
+        //    MyWaveProvider provider = new MyWaveProvider(new Uri(VALID_MP3_STREAM_1), 20480);
+        //    Assert.AreEqual("16 bit PCM: 32kHz 2 channels", provider.WaveFormat.ToString());
+        //}
 
         [Test]
         public void Read_BufferSizeEqualToReadIncrement_OutputCorrectly()

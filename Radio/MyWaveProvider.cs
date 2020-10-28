@@ -14,11 +14,15 @@ namespace Radio
 {
     class MyWaveProvider : IWaveProvider, IDisposable
     {
-        const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
+        const int WAV_HEADER_SIZE = 43; 
+        const int WAV_NUMCHANNELS_OFFSET = 22;
+        const int WAV_NUMCHANNELS_SIZE = 2;
+        const int WAV_SAMPLERATE_OFFSET = 24;
+        const int WAV_SAMPLERATE_SIZE = 4;
 
         private HttpWebResponse response;
         private Stream sourceStream;
-        private bool requestNextBuffer;
+        private bool doneReadingBeingReadBuffer;
         private int beingReadBufferUnreadIndexBookmark;
         private byte[] beingReadBuffer;
         private Bufferer bufferer;
@@ -33,43 +37,33 @@ namespace Radio
 
         public MyWaveProvider(Uri url, int bufferSize)
         {
-            HttpWebRequest req;
-            HttpWebResponse tempRes = null;
-
-            try // init WaveFormat from a fragment of the audio file
-            {
-                req = (HttpWebRequest)WebRequest.Create(url.ToString());
-                tempRes = (HttpWebResponse)req.GetResponse();
-                Stream tempStream = tempRes.GetResponseStream();
-
-                byte[] bfr = new byte[BYTE_NEEDED_FOR_INIT];
-                int bytesRead = tempStream.Read(bfr, 0, bfr.Length);
-                Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(bfr));
-                WaveFormat = mp3FileReader.WaveFormat;
-                Url = url;
-
-                Console.WriteLine("Printing WaveFormat Object: ");
-                Console.WriteLine(WaveFormat.ToString());
-                //Console.WriteLine("bite rate: {0}", WaveFormat.AverageBytesPerSecond);
-            }
-            catch (Exception ex)
-            {
-                // TODO: display message in UI
-                Console.WriteLine("failed to read url: ");
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (tempRes != null)
-                {
-                    tempRes.Close();
-                }
-            }
-
-            this.InitializeStream();
+            // init stream
+            this.Url = url;
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url.ToString());
+            response = (HttpWebResponse)req.GetResponse();
+            sourceStream = response.GetResponseStream();
 
             bufferer = new Bufferer(sourceStream, bufferSize);
-            requestNextBuffer = true;
+
+            // read header
+            beingReadBuffer = bufferer.GetNextBuffer();
+            while(beingReadBuffer.Length < WAV_HEADER_SIZE)
+            {
+                beingReadBuffer = ConCatByteArr(beingReadBuffer, bufferer.GetNextBuffer());
+            }
+
+            byte[] numOfChannelsBytes = new byte[WAV_NUMCHANNELS_SIZE];
+            Array.Copy(beingReadBuffer, WAV_NUMCHANNELS_OFFSET, numOfChannelsBytes, 0, WAV_NUMCHANNELS_SIZE);
+            int numOfChannels = BitConverter.ToInt16(numOfChannelsBytes, 0);
+            Console.Out.WriteLine("num of channels: {0}", numOfChannels);
+
+            byte[] sampleRateBytes = new byte[WAV_SAMPLERATE_SIZE];
+            Array.Copy(beingReadBuffer, WAV_SAMPLERATE_OFFSET, sampleRateBytes, 0, WAV_SAMPLERATE_SIZE);
+            int sampleRate = BitConverter.ToInt32(sampleRateBytes, 0);
+            Console.Out.WriteLine("sample rate: {0}", sampleRate);
+            this.WaveFormat = new WaveFormat(sampleRate, numOfChannels);
+
+            doneReadingBeingReadBuffer = false;
             beingReadBufferUnreadIndexBookmark = 0;
 
 #if DEBUG
@@ -78,16 +72,15 @@ namespace Radio
                 debugFileStream = File.Create(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6) + @"\radioDebug.wav"); 
             }
 #endif
+
+            byte[] ConCatByteArr(byte[] arrA, byte[] arrB)
+            {
+                byte[] result = new byte[arrA.Length + arrB.Length];
+                arrA.CopyTo(result, 0);
+                arrB.CopyTo(result, arrA.Length);
+                return result;
+            }
         }
-
-        private void InitializeStream()
-        {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(Url.ToString());
-            response = (HttpWebResponse)req.GetResponse();
-            sourceStream = response.GetResponseStream();
-        }
-
-
 
         public int Read(byte[] buffer, int offset, int count)
         {
@@ -99,7 +92,7 @@ namespace Radio
 
             void writeDataFromFilledBuffers(ref int wbc)
             {
-                if (requestNextBuffer)
+                if (doneReadingBeingReadBuffer)
                 {
                     beingReadBuffer = bufferer.GetNextBuffer();
                     if (beingReadBuffer == null)
@@ -115,7 +108,7 @@ namespace Radio
                 if ((count - wbc) >= unreadBytesInBuffer)
                 {
                     // this whole buffer will fit; write the rest of the buffer from the bookmark and clear bookmark
-                    requestNextBuffer = true;
+                    doneReadingBeingReadBuffer = true;
                     int bytesToWrite = unreadBytesInBuffer;
 
                     Logger.Debug("[if]   beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
@@ -138,7 +131,7 @@ namespace Radio
                 else
                 {
                     // this whole buffer is more than needed; write as much data as possible, bookmark the index
-                    requestNextBuffer = false;
+                    doneReadingBeingReadBuffer = false;
                     int bytesToWrite = count - wbc;
 
                     Logger.Debug("[else] beingReadBuffer size: {0}, bookmark: {1}, buffer size: {2}, offset: {3}, writtenByteCount: {4}, bytesToWrite: {5}",
