@@ -55,12 +55,13 @@ namespace Radio
             byte[] numOfChannelsBytes = new byte[WAV_NUMCHANNELS_SIZE];
             Array.Copy(beingReadBuffer, WAV_NUMCHANNELS_OFFSET, numOfChannelsBytes, 0, WAV_NUMCHANNELS_SIZE);
             int numOfChannels = BitConverter.ToInt16(numOfChannelsBytes, 0);
-            Console.Out.WriteLine("num of channels: {0}", numOfChannels);
+            Logger.Debug("num of channels: {0}", numOfChannels);
 
             byte[] sampleRateBytes = new byte[WAV_SAMPLERATE_SIZE];
             Array.Copy(beingReadBuffer, WAV_SAMPLERATE_OFFSET, sampleRateBytes, 0, WAV_SAMPLERATE_SIZE);
             int sampleRate = BitConverter.ToInt32(sampleRateBytes, 0);
-            Console.Out.WriteLine("sample rate: {0}", sampleRate);
+            Logger.Debug("sample rate: {0}", sampleRate);
+
             this.WaveFormat = new WaveFormat(sampleRate, numOfChannels);
 
             doneReadingBeingReadBuffer = false;
