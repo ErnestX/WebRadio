@@ -22,7 +22,7 @@ namespace Radio.UnitTests
         [Test]
         public void CreateNewProviderFromUri_ValidAndSuccessful_CanRetrieveCorrectWaveFormat() { 
       
-            Mp3WaveProvider provider = new Mp3WaveProvider(new Uri(VALID_MP3_STREAM_1), 20480);
+            MyWaveProvider provider = new MyWaveProvider(new Uri(VALID_MP3_STREAM_1), 20480);
             Assert.AreEqual("16 bit PCM: 32kHz 2 channels", provider.WaveFormat.ToString());
         }
 
@@ -64,7 +64,7 @@ namespace Radio.UnitTests
         {
             HttpWebRequest req;
             HttpWebResponse tempRes = null;
-            Mp3WaveProvider mwp = null;
+            MyWaveProvider mwp = null;
 
             try
             {
@@ -92,7 +92,7 @@ namespace Radio.UnitTests
                 } while (zeroCounter < 4);
 
 
-                mwp = new Mp3WaveProvider(new Uri(url), bufferSize);
+                mwp = new MyWaveProvider(new Uri(url), bufferSize);
                 byte[] testBuffer = new byte[1024 * 800];
                 int testOffset = 0;
                 zeroCounter = 0;

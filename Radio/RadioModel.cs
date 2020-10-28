@@ -33,7 +33,7 @@ namespace Radio
 
             Uri resUrl = SoundCloudResourceFinder.FindAudioResBySCLink(url);
             this.CurrentResourceUri = resUrl;
-            this.WaveProvider = new Mp3WaveProvider(resUrl, 2048); 
+            this.WaveProvider = new Mp3WaveProvider(resUrl, 20480); 
 
             this.InvokeConnectedEvent();
         }

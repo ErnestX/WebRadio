@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class Mp3WaveProvider : IWaveProvider, IDisposable
+    class MyWaveProvider : IWaveProvider, IDisposable
     {
         const int BYTE_NEEDED_FOR_INIT = 16384; // have to cover the first two frame headers. 
 
@@ -31,14 +31,14 @@ namespace Radio
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Mp3WaveProviderDebug");
 
-        public Mp3WaveProvider(Uri mp3Url, int bufferSize)
+        public MyWaveProvider(Uri url, int bufferSize)
         {
             HttpWebRequest req;
             HttpWebResponse tempRes = null;
 
-            try // init WaveFormat from a fragment of the mp3 file
+            try // init WaveFormat from a fragment of the audio file
             {
-                req = (HttpWebRequest)WebRequest.Create(mp3Url.ToString());
+                req = (HttpWebRequest)WebRequest.Create(url.ToString());
                 tempRes = (HttpWebResponse)req.GetResponse();
                 Stream tempStream = tempRes.GetResponseStream();
 
@@ -46,7 +46,7 @@ namespace Radio
                 int bytesRead = tempStream.Read(bfr, 0, bfr.Length);
                 Mp3FileReader mp3FileReader = new Mp3FileReader(new MemoryStream(bfr));
                 WaveFormat = mp3FileReader.WaveFormat;
-                Url = mp3Url;
+                Url = url;
 
                 Console.WriteLine("Printing WaveFormat Object: ");
                 Console.WriteLine(WaveFormat.ToString());
@@ -173,7 +173,7 @@ namespace Radio
 #endif
         }
 
-        ~Mp3WaveProvider()
+        ~MyWaveProvider()
         {
             this.Dispose();
         }

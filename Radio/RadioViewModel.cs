@@ -64,7 +64,7 @@ namespace Radio
         {
             waveProvider = e.WaveProvider;
             WaveOutEvent wo = new WaveOutEvent();
-            //wo.DesiredLatency = 200;
+            wo.DesiredLatency = 200;
             //wo.NumberOfBuffers = 2;
             wo.Init(waveProvider);
             wo.Play(); // TODO: Call dispose()
