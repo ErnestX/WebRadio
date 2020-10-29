@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class MyWavReader
+    class MyWAVReader
     {
         const int WAV_HEADER_SIZE = 43;
         const int WAV_NUMCHANNELS_OFFSET = 22;

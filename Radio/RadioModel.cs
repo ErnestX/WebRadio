@@ -12,13 +12,14 @@ using System.Web;
 [assembly: InternalsVisibleToAttribute("Radio.UnitTests")]
 namespace Radio
 {
-    class RadioModel
+    class RadioModel : IDisposable
     {
         public Uri CurrentResourceUri { get; private set; }
-        public IWaveProvider WaveProvider { get; private set; }
+        public MyBufferedWaveProvider waveProvider { get; private set; }
 
         public delegate void StateChangedHandler(object sender, ConnectedEventArgs e);
         public event StateChangedHandler Connected;
+        private HttpWebResponse response;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
@@ -33,7 +34,11 @@ namespace Radio
 
             Uri resUrl = SoundCloudResourceFinder.FindAudioResBySCLink(url);
             this.CurrentResourceUri = resUrl;
-            this.WaveProvider = new MyWaveProvider(resUrl, 20480); 
+
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(resUrl.ToString());
+            response = (HttpWebResponse)req.GetResponse();
+
+            this.waveProvider = new MyBufferedWaveProvider(response.GetResponseStream(), 1024 * 1024 * 2); 
 
             this.InvokeConnectedEvent();
         }
@@ -42,8 +47,23 @@ namespace Radio
         {
             if (Connected != null)
             {
-                Connected.Invoke(this, new ConnectedEventArgs(this.WaveProvider));
+                Connected.Invoke(this, new ConnectedEventArgs(this.waveProvider));
             }
+        }
+
+        public void Dispose()
+        {
+            if (response != null)
+            {
+                response.Close();
+            }
+
+            this.waveProvider.Dispose();
+        }
+
+        ~RadioModel()
+        {
+            this.Dispose();
         }
     }
 }

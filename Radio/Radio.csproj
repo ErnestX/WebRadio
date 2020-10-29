@@ -87,17 +87,17 @@
     <Compile Include="Bufferer.cs" />
     <Compile Include="BufferReuseManager.cs" />
     <Compile Include="ConnectedEventArgs.cs" />
-    <Compile Include="MonitoredBufferedMp3Stream.cs" />
     <Compile Include="MonitoredStream.cs" />
     <Compile Include="Mp3Decoder.cs" />
     <Compile Include="DecodingStream.cs" />
-    <Compile Include="MyWaveProvider.cs" />
+    <Compile Include="MyBufferedWaveProvider.cs" />
+    <Compile Include="MyWAVReader.cs" />
     <Compile Include="SoundCloudResourceFinder.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="RadioModel.cs" />
     <Compile Include="RadioViewModel.cs" />
     <Compile Include="StreamReader.cs" />
-    <Compile Include="WavReader.cs" />
+    <Compile Include="WaveProvider.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

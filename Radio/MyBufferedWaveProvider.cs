@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace Radio
 {
-    class MyWaveProvider : IWaveProvider, IDisposable
+    /// <summary>
+    /// </summary>
+    class MyBufferedWaveProvider : IWaveProvider,IDisposable
     {
-        private HttpWebResponse response;
         private Stream sourceStream;
         private bool doneReadingBeingReadBuffer;
         private int beingReadBufferUnreadIndexBookmark;
@@ -24,27 +25,23 @@ namespace Radio
         private bool LOG_STREAM_TO_FILE = true; // switch off to avoid conflict when running tests in parallel
         private Stream debugFileStream;
 #endif
-        public Uri Url { get; }
         public WaveFormat WaveFormat {private set; get;}
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Mp3WaveProviderDebug");
 
-        public MyWaveProvider(Uri url, int bufferSize)
+        public MyBufferedWaveProvider(Stream stream, int bufferSize)
         {
-            this.Url = url;
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url.ToString());
-            response = (HttpWebResponse)req.GetResponse();
-            sourceStream = response.GetResponseStream();
+            sourceStream = stream;
 
             bufferer = new Bufferer(sourceStream, bufferSize);
 
             beingReadBuffer = bufferer.GetNextBuffer();
-            while(beingReadBuffer.Length < MyWavReader.WavHeaderSize())
+            while(beingReadBuffer.Length < MyWAVReader.WavHeaderSize())
             {
                 beingReadBuffer = ConCatByteArr(beingReadBuffer, bufferer.GetNextBuffer());
             }
             byte[] header = (byte[])beingReadBuffer.Clone();
-            this.WaveFormat = new WaveFormat(MyWavReader.GetSampleRateFromHeader(header), MyWavReader.GetNumChannelFromHeader(header));
+            this.WaveFormat = new WaveFormat(MyWAVReader.GetSampleRateFromHeader(header), MyWAVReader.GetNumChannelFromHeader(header));
 
             doneReadingBeingReadBuffer = false;
             beingReadBufferUnreadIndexBookmark = 0;
@@ -134,13 +131,8 @@ namespace Radio
             }
         }
 
-
         public void Dispose()
         {
-            if (response != null)
-            {
-                response.Close();
-            }
 #if DEBUG
             if (debugFileStream != null)
             {
@@ -149,7 +141,7 @@ namespace Radio
 #endif
         }
 
-        ~MyWaveProvider()
+        ~MyBufferedWaveProvider()
         {
             this.Dispose();
         }

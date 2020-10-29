@@ -58,7 +58,7 @@ namespace Radio.UnitTests
         {
             HttpWebRequest req;
             HttpWebResponse tempRes = null;
-            MyWaveProvider mwp = null;
+            MyBufferedWaveProvider mwp = null;
 
             try
             {
@@ -86,7 +86,7 @@ namespace Radio.UnitTests
                 } while (zeroCounter < 4);
 
 
-                mwp = new MyWaveProvider(new Uri(url), bufferSize);
+                mwp = new MyBufferedWaveProvider(new Uri(url), bufferSize);
                 byte[] testBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
                 int testOffset = 0;
                 zeroCounter = 0;

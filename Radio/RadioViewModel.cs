@@ -62,9 +62,9 @@ namespace Radio
 
         private void ConnectedEventHandler(object sender, ConnectedEventArgs e)
         {
-            waveProvider = e.WaveProvider;
+            waveProvider = e.monBufStream;
             WaveOutEvent wo = new WaveOutEvent();
-            wo.DesiredLatency = 200;
+            //wo.DesiredLatency = 200;
             //wo.NumberOfBuffers = 2;
             wo.Init(waveProvider);
             wo.Play(); // TODO: Call dispose()

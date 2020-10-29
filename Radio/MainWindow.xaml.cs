@@ -13,7 +13,7 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private RadioViewModel radioViewModel;
-        private MyWaveProvider waveProvider;
+        private MyBufferedWaveProvider waveProvider;
 
         // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");

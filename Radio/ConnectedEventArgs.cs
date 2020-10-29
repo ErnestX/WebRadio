@@ -10,10 +10,10 @@ namespace Radio
 {
     class ConnectedEventArgs : EventArgs
     {
-        public IWaveProvider WaveProvider { get; }
-        public ConnectedEventArgs(IWaveProvider s)
+        public MyBufferedWaveProvider monBufStream { get; }
+        public ConnectedEventArgs(MyBufferedWaveProvider s)
         {
-            this.WaveProvider = s;
+            this.monBufStream = s;
         }
     }
 }
