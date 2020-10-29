@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Radio.UnitTests
 {
     [TestFixture,SingleThreaded] // prevent parallel read requests
-    class MyWaveProviderTests
+    class MyBufferedWaveProviderTests
     {
         const string VALID_WAV_STREAM_1 = "https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav"; // 1MB
         const string VALID_MP3_STREAM_1 = "https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"; //746kb, 27sec, 224kbps
@@ -56,20 +56,21 @@ namespace Radio.UnitTests
 
         public void ReadTestHelper(string url, int bufferSize, int readIncrement)
         {
-            HttpWebRequest req;
-            HttpWebResponse tempRes = null;
-            MyBufferedWaveProvider mwp = null;
+            HttpWebRequest req1;
+            HttpWebResponse tempRes1 = null;
+            MyBufferedWaveProvider mwp1 = null;
+
+            byte[] expectedBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
+            int expectedOffset = 0;
+            int bytesRead;
+            int zeroCounter = 0;
 
             try
             {
-                req = (HttpWebRequest)WebRequest.Create(url);
-                tempRes = (HttpWebResponse)req.GetResponse();
-                Stream tempStream = tempRes.GetResponseStream();
+                req1 = (HttpWebRequest)WebRequest.Create(url);
+                tempRes1 = (HttpWebResponse)req1.GetResponse();
+                Stream tempStream = tempRes1.GetResponseStream();
 
-                byte[] expectedBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
-                int expectedOffset = 0;
-                int bytesRead;
-                int zeroCounter = 0;
                 do
                 {
                     bytesRead = tempStream.Read(expectedBuffer, expectedOffset, readIncrement);
@@ -84,15 +85,39 @@ namespace Radio.UnitTests
                         zeroCounter = 0;
                     }
                 } while (zeroCounter < 4);
+            }
+            finally
+            {
+                if (tempRes1 != null)
+                {
+                    tempRes1.Close();
+                }
 
+                if (mwp1 != null)
+                {
+                    mwp1.Dispose();
+                }
+            }
 
-                mwp = new MyBufferedWaveProvider(new Uri(url), bufferSize);
-                byte[] testBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
-                int testOffset = 0;
-                zeroCounter = 0;
+            HttpWebRequest req2;
+            HttpWebResponse tempRes2 = null;
+            MyBufferedWaveProvider mwp2 = null;
+
+            
+            byte[] testBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
+            int testOffset = 0;
+            zeroCounter = 0;
+
+            try
+            {
+                req2 = (HttpWebRequest)WebRequest.Create(url);
+                tempRes2 = (HttpWebResponse)req2.GetResponse();
+                Stream tempStream = tempRes2.GetResponseStream();
+
+                mwp2 = new MyBufferedWaveProvider(tempStream, bufferSize);
                 do
                 {
-                    bytesRead = mwp.Read(testBuffer, testOffset, readIncrement);
+                    bytesRead = mwp2.Read(testBuffer, testOffset, readIncrement);
                     testOffset += bytesRead;
 
                     if (bytesRead == 0)
@@ -104,26 +129,26 @@ namespace Radio.UnitTests
                         zeroCounter = 0;
                     }
                 } while (zeroCounter < 4);
-
-                Assert.AreEqual(256, expectedBuffer.Distinct().Count());
-                Assert.IsTrue(testBuffer.Length == expectedBuffer.Length);
-                TestContext.Out.WriteLine("expected read length: {0}; actual read length: {1}", expectedOffset, testOffset);
-                for (int i = 0; i < expectedBuffer.Length; i++)
-                {
-                    Assert.AreEqual(expectedBuffer[i], testBuffer[i], String.Format("inequity found at index: {0}", i));
-                }
             }
             finally
             {
-                if (tempRes != null)
+                if (tempRes2 != null)
                 {
-                    tempRes.Close();
+                    tempRes2.Close();
                 }
 
-                if (mwp != null)
+                if (mwp2 != null)
                 {
-                    mwp.Dispose();
+                    mwp2.Dispose();
                 }
+            }
+
+            Assert.AreEqual(256, expectedBuffer.Distinct().Count());
+            Assert.IsTrue(testBuffer.Length == expectedBuffer.Length);
+            TestContext.Out.WriteLine("expected read length: {0}; actual read length: {1}", expectedOffset, testOffset);
+            for (int i = 0; i < expectedBuffer.Length; i++)
+            {
+                Assert.AreEqual(expectedBuffer[i], testBuffer[i], String.Format("inequity found at index: {0}", i));
             }
         }
     }
