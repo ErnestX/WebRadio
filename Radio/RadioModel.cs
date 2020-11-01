@@ -14,12 +14,15 @@ namespace Radio
 {
     class RadioModel : IDisposable
     {
+        private const int MONITOR_UPDATE_INTERVAL = 1000;
+        private const int BUFFER_SIZE = 1024 * 1024 * 2;
         public Uri CurrentResourceUri { get; private set; }
         public MyBufferedWaveProvider waveProvider { get; private set; }
 
         public delegate void StateChangedHandler(object sender, ConnectedEventArgs e);
         public event StateChangedHandler Connected;
         private HttpWebResponse response;
+        private MonitoredStream monitoredStream;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
@@ -38,7 +41,8 @@ namespace Radio
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(resUrl.ToString());
             response = (HttpWebResponse)req.GetResponse();
 
-            this.waveProvider = new MyBufferedWaveProvider(response.GetResponseStream(), 1024 * 1024 * 2); 
+            monitoredStream = new MonitoredStream(response.GetResponseStream(), MONITOR_UPDATE_INTERVAL);
+            this.waveProvider = new MyBufferedWaveProvider(monitoredStream, BUFFER_SIZE); 
 
             this.InvokeConnectedEvent();
         }

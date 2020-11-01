@@ -59,7 +59,6 @@ namespace Radio.UnitTests
             HttpWebRequest req1;
             HttpWebResponse tempRes1 = null;
             MyBufferedWaveProvider mwp1 = null;
-
             byte[] expectedBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
             int expectedOffset = 0;
             int bytesRead;
@@ -102,8 +101,6 @@ namespace Radio.UnitTests
             HttpWebRequest req2;
             HttpWebResponse tempRes2 = null;
             MyBufferedWaveProvider mwp2 = null;
-
-            
             byte[] testBuffer = new byte[1024 * 1024 * 2]; // assume the test stream size < 2MB
             int testOffset = 0;
             zeroCounter = 0;

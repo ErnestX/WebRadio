@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Radio
 {
@@ -18,29 +19,43 @@ namespace Radio
         public override long Length => throw new NotSupportedException();
         public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
-        public override void Flush()
+        private Stream sourceStream;
+        private Timer timer;
+        private int totalBytesRead;
+
+        public delegate void OnUpdateHandler(object sender, OnUpdateEventArgs args);
+        public event OnUpdateHandler OnUpdate;
+
+        /// <param name="s">source stream to be monitored</param>
+        /// <param name="updateInterval">interval between updates of download speed in milliseconds</param>
+        public MonitoredStream(Stream s, int updateInterval)
         {
-            throw new NotImplementedException();
+            sourceStream = s;
+
+            timer = new Timer();
+            timer.Interval = updateInterval;
+            timer.Tick += OnTickHandler;
+            timer.Start();
+
+            totalBytesRead = 0;
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            int bytesRead = sourceStream.Read(buffer, offset, count);
+            totalBytesRead += bytesRead;
+            return bytesRead;
         }
 
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
+        public override void Flush() {throw new NotImplementedException();}
+        public override long Seek(long offset, SeekOrigin origin) {throw new NotSupportedException();}
+        public override void Write(byte[] buffer, int offset, int count) {throw new NotSupportedException();}
+        public override void SetLength(long value) {throw new NotSupportedException();}
 
-        public override void Write(byte[] buffer, int offset, int count)
+        private void OnTickHandler(object sender, EventArgs args)
         {
-            throw new NotSupportedException();
-        }
-
-        public override void SetLength(long value)
-        {
-            throw new NotSupportedException();
+            OnUpdate(this, new OnUpdateEventArgs(totalBytesRead, timer.Interval));
+            totalBytesRead = 0;
         }
     }
 }
