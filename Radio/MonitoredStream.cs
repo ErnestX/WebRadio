@@ -42,7 +42,7 @@ namespace Radio
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            Console.WriteLine("MonitoredStream reading");
+            Console.WriteLine("MonitoredStream reading...");
             int bytesRead = sourceStream.Read(buffer, offset, count);
             totalBytesRead += bytesRead;
             return bytesRead;
@@ -58,7 +58,6 @@ namespace Radio
             if (OnUpdate != null)
             {
                 OnUpdate.Invoke(this, new OnUpdateEventArgs(totalBytesRead, timer.Interval));
-                Console.WriteLine("MonitoredStream update with bytes read: {0}", totalBytesRead);
             }
             totalBytesRead = 0;
         }

@@ -30,7 +30,6 @@ namespace Radio
         void OnStateChanged(object sender, PropertyChangedEventArgs args)
         {
             Logger.Info("OnStateChanged sent by: {0}", args.PropertyName);
-
             switch (args.PropertyName)
             {
                 case "IsPlaying":
@@ -39,7 +38,7 @@ namespace Radio
                         playButton.Content = "playing!";
                     }
                     break;
-                case "downloadSpeedKBPerSec":
+                case "DownloadSpeedKBPerSec":
                     downloadSpeed.Text = String.Format("{0}KB/s", radioViewModel.DownloadSpeedKBPerSec);
                     break;
             }
