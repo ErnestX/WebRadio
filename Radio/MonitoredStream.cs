@@ -55,9 +55,10 @@ namespace Radio
 
         private void OnTickHandler(object sender, EventArgs args)
         {
-            if (OnUpdate != null)
+            OnUpdateHandler handler = OnUpdate;
+            if (handler != null)
             {
-                OnUpdate.Invoke(this, new OnUpdateEventArgs(totalBytesRead, timer.Interval));
+                handler(this, new OnUpdateEventArgs(totalBytesRead, timer.Interval));
             }
             totalBytesRead = 0;
         }

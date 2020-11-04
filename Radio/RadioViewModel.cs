@@ -39,7 +39,7 @@ namespace Radio
         public RadioViewModel()
         {
             radioModel = new RadioModel();
-            radioModel.Connected += ConnectedEventHandler;
+            radioModel.OnConnected += ConnectedEventHandler;
             radioModel.OnMonitorUpdate += MonitorUpdateHandler;
 
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
@@ -85,8 +85,7 @@ namespace Radio
             IsPlaying = true;
         }
 
-        protected bool SetProperty<T>(ref T storage, T value,
-                              [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (object.Equals(storage, value))
                 return false;
@@ -98,8 +97,11 @@ namespace Radio
 
         protected void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

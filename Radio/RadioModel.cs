@@ -21,7 +21,7 @@ namespace Radio
 
         private HttpWebResponse response;
         public delegate void StateChangedHandler(object sender, ConnectedEventArgs e);
-        public event StateChangedHandler Connected;
+        public event StateChangedHandler OnConnected;
 
         private MonitoredStream monitoredStream;
         public delegate void OnMonitorUpdateHandler(object sender, OnUpdateEventArgs args);
@@ -53,17 +53,19 @@ namespace Radio
 
         private void OnUpdateHandler(object sender, OnUpdateEventArgs args)
         {
-            if (OnMonitorUpdate != null)
+            OnMonitorUpdateHandler handler = OnMonitorUpdate;
+            if (handler != null)
             {
-                OnMonitorUpdate.Invoke(this, args);
+                handler(this, args);
             }
         }
 
         void InvokeConnectedEvent()
         {
-            if (Connected != null)
+            StateChangedHandler handler = OnConnected;
+            if (handler != null)
             {
-                Connected.Invoke(this, new ConnectedEventArgs(this.waveProvider));
+                handler(this, new ConnectedEventArgs(this.waveProvider));
             }
         }
 

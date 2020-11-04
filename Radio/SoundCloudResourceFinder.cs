@@ -16,8 +16,8 @@ namespace Radio
         public static Uri FindAudioResBySCLink(Uri url)
         {
             //TODO: stub
-            //Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav");
-            Uri testUrl = new Uri("https://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav");
+            Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav");
+            //Uri testUrl = new Uri("https://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav");
             //Uri testUrl = new Uri("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3");
             //Uri testUrl = new Uri("http://www.hochmuth.com/mp3/Tchaikovsky_Nocturne__orch.mp3");
             return testUrl;
