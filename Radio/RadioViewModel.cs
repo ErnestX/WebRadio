@@ -55,7 +55,10 @@ namespace Radio
 
             if (this.Url != null) 
             {
-                radioModel.ConnectToURL(this.Url);
+                if (!this.IsPlaying)
+                {
+                    radioModel.ConnectToURL(this.Url);
+                }
             }
             else
             {
