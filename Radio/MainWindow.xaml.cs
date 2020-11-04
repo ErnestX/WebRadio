@@ -20,7 +20,7 @@ namespace Radio
             InitializeComponent();
 
             playButton.Content = "play";
-            downloadSpeed.Text = "0KB/s";
+            downloadSpeed.Text = "--KB/s";
 
             this.radioViewModel = new RadioViewModel();
             radioViewModel.PropertyChanged += OnStateChanged;
