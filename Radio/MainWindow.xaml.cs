@@ -13,9 +13,6 @@ namespace Radio
     public partial class MainWindow : Window
     {
         private RadioViewModel radioViewModel;
-        private MyBufferedWaveProvider waveProvider;
-
-        // create and set up logger
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
         public MainWindow()
@@ -23,6 +20,7 @@ namespace Radio
             InitializeComponent();
 
             playButton.Content = "play";
+            downloadSpeed.Text = "0KB/s";
 
             this.radioViewModel = new RadioViewModel();
             radioViewModel.PropertyChanged += OnStateChanged;
@@ -33,9 +31,17 @@ namespace Radio
         {
             Logger.Info("OnStateChanged sent by: {0}", args.PropertyName);
 
-            if (args.PropertyName.Equals("IsPlaying"))
+            switch (args.PropertyName)
             {
-                playButton.Content = "playing!";
+                case "IsPlaying":
+                    if (radioViewModel.IsPlaying)
+                    {
+                        playButton.Content = "playing!";
+                    }
+                    break;
+                case "downloadSpeedKBPerSec":
+                    downloadSpeed.Text = String.Format("{0}KB/s", radioViewModel.DownloadSpeedKBPerSec);
+                    break;
             }
 
         }

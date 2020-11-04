@@ -19,10 +19,13 @@ namespace Radio
         public Uri CurrentResourceUri { get; private set; }
         public MyBufferedWaveProvider waveProvider { get; private set; }
 
+        private HttpWebResponse response;
         public delegate void StateChangedHandler(object sender, ConnectedEventArgs e);
         public event StateChangedHandler Connected;
-        private HttpWebResponse response;
+
         private MonitoredStream monitoredStream;
+        public delegate void OnMonitorUpdateHandler(object sender, OnUpdateEventArgs args);
+        public event OnMonitorUpdateHandler OnMonitorUpdate;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
 
@@ -42,9 +45,18 @@ namespace Radio
             response = (HttpWebResponse)req.GetResponse();
 
             monitoredStream = new MonitoredStream(response.GetResponseStream(), MONITOR_UPDATE_INTERVAL);
+            monitoredStream.OnUpdate += OnUpdateHandler;
             this.waveProvider = new MyBufferedWaveProvider(monitoredStream, BUFFER_SIZE); 
 
             this.InvokeConnectedEvent();
+        }
+
+        private void OnUpdateHandler(object sender, OnUpdateEventArgs args)
+        {
+            if (OnMonitorUpdate != null)
+            {
+                OnMonitorUpdate.Invoke(this, args);
+            }
         }
 
         void InvokeConnectedEvent()

@@ -13,22 +13,25 @@ namespace Radio
     {
         private RadioModel radioModel;
         private Boolean isPlaying;
+        private double downloadSpeedKBPerSec;
         private IWaveProvider waveProvider;
 
         public Uri Url { protected set; get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Boolean IsPlaying {
-            private set
-            {
-                SetProperty(ref isPlaying, value);
-            }
-            get
-            {
-                return this.isPlaying;
-            }
+        public Boolean IsPlaying 
+        {
+            private set {SetProperty(ref isPlaying, value);}
+            get {return this.isPlaying;}
         }
+
+        public double DownloadSpeedKBPerSec
+        {
+            private set { SetProperty(ref downloadSpeedKBPerSec, value); }
+            get { return this.downloadSpeedKBPerSec; }
+        }
+
         public ICommand PlayCommand { protected set; get; }
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetLogger("Default");
@@ -37,6 +40,7 @@ namespace Radio
         {
             radioModel = new RadioModel();
             radioModel.Connected += ConnectedEventHandler;
+            radioModel.OnMonitorUpdate += MonitorUpdateHandler;
 
             this.PlayCommand = new DelegateCommand(ExecutePlayCommand);
 
@@ -60,6 +64,11 @@ namespace Radio
             }
         }
 
+        private void MonitorUpdateHandler(object sender, OnUpdateEventArgs args)
+        {
+            this.DownloadSpeedKBPerSec = (double)(args.BytesDownloaded) / (double)args.DownloadTimeMilSec;
+        }
+
         private void ConnectedEventHandler(object sender, ConnectedEventArgs e)
         {
             waveProvider = e.mbwp;
@@ -71,20 +80,6 @@ namespace Radio
             Console.WriteLine("audio playing");
             Logger.Info("ViewModel: connected!");
             IsPlaying = true;
-        }
-
-        // If URL is valid, return sanitized URL; else, return null
-        private String ValidateAndSanitizeURL(String url)
-        {
-            if (url == null) 
-            {
-                return null;
-            } 
-            else
-            {
-                // TODO: stub
-                return url;
-            }
         }
 
         protected bool SetProperty<T>(ref T storage, T value,

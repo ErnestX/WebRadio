@@ -92,6 +92,7 @@
     <Compile Include="DecodingStream.cs" />
     <Compile Include="MyBufferedWaveProvider.cs" />
     <Compile Include="MyWAVReader.cs" />
+    <Compile Include="OnUpdateEventArgs.cs" />
     <Compile Include="SoundCloudResourceFinder.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="RadioModel.cs" />
