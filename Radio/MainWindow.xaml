@@ -9,12 +9,18 @@
         ResizeMode="NoResize" Height="350" Width="350">
 
     <Grid>
-        <!-- instead of making use of the click event, the button is bound 
-        to an ICommand property which wraps around a function that does the job -->
-        <TextBlock Name="downloadSpeed"/>
-        <Button Name="playButton"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" 
+                Name="playButton"
                 Background="Transparent"
                 Command="{Binding PlayCommand}"/>
+        
+        <TextBlock Grid.Row="1"
+                   Name="downloadSpeed"
+                   HorizontalAlignment="Center"/>
         
     </Grid>
 </Window>

@@ -14,7 +14,7 @@ namespace Radio
 {
     class RadioModel : IDisposable
     {
-        private const int MONITOR_UPDATE_INTERVAL = 1000;
+        private const int MONITOR_UPDATE_INTERVAL = 5000;
         private const int BUFFER_SIZE = 1024 * 1024 * 2;
         public Uri CurrentResourceUri { get; private set; }
         public MyBufferedWaveProvider waveProvider { get; private set; }

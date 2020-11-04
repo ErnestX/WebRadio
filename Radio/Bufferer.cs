@@ -24,7 +24,6 @@ namespace Radio
 
         // return false if end of stream is reached and no filledBuffer is left, else true
         public bool EndOfStream { get; private set; }
-        private bool endOfStreamReachedAndBuffered;
 
         private Stream sourceStream;
 
